@@ -1,0 +1,8 @@
+# Files
+*.py[cod]
+
+# Directories
+.idea
+venv
+dist
+*egg*
