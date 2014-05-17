@@ -1,12 +1,32 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}This is an example page{% endblock %}
 
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+{% endblock %}
+
 {% block navbar %}
-<div class="navbar navbar-fixed-top">
-	<!-- ... -->
-</div>
 {% endblock %}
 
 {% block content %}
-<h1>Hello, Bootstrap</h1>
+	<div class="container">
+		<table class="table table-bordered">
+			<tr>
+				<td>Сущность</td>
+				<td>Сущность</td>
+				<td>Сущность</td>
+			</tr>
+			<tr>
+				<td>Сущность</td>
+				<td>Сущность</td>
+				<td>Сущность</td>
+			</tr>
+			<tr>
+				<td>Сущность</td>
+				<td>Сущность</td>
+				<td>Сущность</td>
+			</tr>
+		</table>
+	</div>
 {% endblock %}
