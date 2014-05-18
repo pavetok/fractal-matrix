@@ -1,5 +1,6 @@
 # Files
 *.py[cod]
+*.sqlite
 
 # Directories
 .idea
