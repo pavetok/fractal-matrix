@@ -6,6 +6,8 @@ class Aspect(db.Model):
     __tablename__ = 'aspects'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    # aspect_id = db.Column(db.Integer, db.ForeignKey('aspect.id'))
+    # aspects = db.relationship('Aspect', backref='composite', lazy='dynamic')
     # todo: реализовать композицию аспектов
 
     def __repr__(self):
@@ -17,6 +19,7 @@ class Universum(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     # todo: реализовать аггрегацию аспектов
+    # todo: реализовать композицию универсумов
 
     def __repr__(self):
         return '<Universum: {}>'.format(self.name)
