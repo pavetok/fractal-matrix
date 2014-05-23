@@ -6,9 +6,10 @@ class Aspect(db.Model):
     __tablename__ = 'aspects'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    # aspect_id = db.Column(db.Integer, db.ForeignKey('aspect.id'))
-    # aspects = db.relationship('Aspect', backref='composite', lazy='dynamic')
-    # todo: реализовать композицию аспектов
+    subaspect_id = db.Column(db.Integer, db.ForeignKey('aspects.id'))
+    subaspects = db.relationship('Aspect',
+                              cascade='all, delete-orphan',
+                              backref=db.backref('superaspect', remote_side=id))
 
     def __repr__(self):
         return '<Aspect: {}>'.format(self.name)

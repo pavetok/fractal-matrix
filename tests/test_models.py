@@ -18,14 +18,19 @@ class ModelTestCase(unittest.TestCase):
         self.app_context.pop()
 
     def test_aspect_creation(self):
-        aspect = Aspect(name='Неизменность')
-        db.session.add(aspect)
-        aspect = Aspect(name='Целостность')
-        db.session.add(aspect)
+        # создаем данные
+        aspect_1 = Aspect(name='Неизменность')
+        db.session.add(aspect_1)
+        aspect_1_1 = Aspect(name='Неизменная Неизменность', superaspect=aspect_1)
+        db.session.add(aspect_1_1)
         db.session.commit()
-        aspects = Aspect.query.all()
-        self.assertTrue(aspects[0].name == 'Неизменность')
-        self.assertTrue(aspects[1].name == 'Целостность')
+        # получаем данные
+        superaspect = Aspect.query.filter_by(name='Неизменность').first()
+        subaspect = Aspect.query.filter_by(name='Неизменная Неизменность').first()
+        # делаем проверки
+        self.assertTrue(superaspect.name == 'Неизменность')
+        self.assertTrue(superaspect.subaspects[0].name == 'Неизменная Неизменность')
+        self.assertTrue(subaspect.superaspect.name == 'Неизменность')
 
     def test_universum_creation(self):
         universum = Universum(name='Неизменность')

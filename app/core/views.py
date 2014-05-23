@@ -14,6 +14,6 @@ def index():
         aspect = Aspect()
         aspect.name = form.name.data
         db.session.add(aspect)
-        flash('Aspect has been added.')
+        flash('Аспект был добавлен')
         return redirect(url_for('.index'))
     return render_template('index.html', form=form)
