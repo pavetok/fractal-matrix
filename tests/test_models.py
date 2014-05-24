@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import unittest
 from app import create_app, db
-from app.models import Aspect, Universum
+from app.models import Aspect, Universum, generate_matrix
 
 
 class ModelTestCase(unittest.TestCase):
@@ -14,7 +14,7 @@ class ModelTestCase(unittest.TestCase):
 
     def tearDown(self):
         db.session.remove()
-        db.drop_all()
+        # db.drop_all()
         self.app_context.pop()
 
     def test_aspect_creation(self):
@@ -31,6 +31,20 @@ class ModelTestCase(unittest.TestCase):
         self.assertTrue(superaspect.name == 'Неизменность')
         self.assertTrue(superaspect.subaspects[0].name == 'Неизменная Неизменность')
         self.assertTrue(subaspect.superaspect.name == 'Неизменность')
+
+    def test_table_creation(self):
+        # создаем данные
+        aspect_1 = Aspect(name='Неизменность')
+        db.session.add(aspect_1)
+        aspect_2 = Aspect(name='Единство')
+        db.session.add(aspect_2)
+        db.session.commit()
+        # создаем матрицу
+        generate_matrix()
+        # получаем данные
+        aspects = Aspect.query.filter(Aspect.subaspect_id != None)
+        # делаем проверки
+        self.assertTrue(aspects[0].name == 'Неизменность Неизменность')
 
     def test_universum_creation(self):
         universum = Universum(name='Неизменность')

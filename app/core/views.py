@@ -8,7 +8,7 @@ from .forms import AspectForm
 
 @core.route('/', methods=['GET', 'POST'])
 def index():
-    # aspects = Aspect.query.all()
+    # обрабатываем форму
     form = AspectForm()
     if form.validate_on_submit():
         aspect = Aspect()
@@ -16,4 +16,6 @@ def index():
         db.session.add(aspect)
         flash('Аспект был добавлен')
         return redirect(url_for('.index'))
+    # отображаем таблицу
+    # aspects = Aspect.query.filter_by(subaspect_id=None)
     return render_template('index.html', form=form)
