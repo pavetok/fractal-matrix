@@ -7,7 +7,30 @@
 	<div class="page-header">
 		<h1>Hello, Stranger!</h1>
 	</div>
-	<div class="col-md-4">
-		{{ wtf.quick_form(form) }}
+	<div class="row">
+		<div class="col-md-4">
+			{{ wtf.quick_form(form, form_type="inline") }}
+		</div>
+	</div>
+	<!--Таблица-->
+	<br><br>
+	<div class="container">
+		<table class="table table-bordered table-hover">
+			<tr>
+				<th class="invisible"></th>
+				<th scope="col">Неизменность</th>
+				<th scope="col">Единство</th>
+			</tr>
+			<tr>
+				<th scope="row">Неизменность</th>
+				<td>Универсум</td>
+				<td>Универсум</td>
+			</tr>
+			<tr>
+				<th scope="row">Единство</th>
+				<td>Универсум</td>
+				<td>Универсум</td>
+			</tr>
+		</table>
 	</div>
 {% endblock %}

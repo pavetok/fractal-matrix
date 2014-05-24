@@ -8,8 +8,8 @@ class Aspect(db.Model):
     name = db.Column(db.String(64), unique=True)
     subaspect_id = db.Column(db.Integer, db.ForeignKey('aspects.id'))
     subaspects = db.relationship('Aspect',
-                              cascade='all, delete-orphan',
-                              backref=db.backref('superaspect', remote_side=id))
+                                 cascade='all, delete-orphan',
+                                 backref=db.backref('superaspect', remote_side=id))
 
     def __repr__(self):
         return '<Aspect: {}>'.format(self.name)
