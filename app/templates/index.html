@@ -15,22 +15,31 @@
 	<!--Таблица-->
 	<br><br>
 	<div class="container">
-		<table class="table table-bordered table-hover">
-			<tr>
-				<th class="invisible"></th>
-				<th scope="col">Неизменность</th>
-				<th scope="col">Единство</th>
-			</tr>
-			<tr>
-				<th scope="row">Неизменность</th>
-				<td>Универсум</td>
-				<td>Универсум</td>
-			</tr>
-			<tr>
-				<th scope="row">Единство</th>
-				<td>Универсум</td>
-				<td>Универсум</td>
-			</tr>
+		<table class="table table-bordered">
+			<tbody>
+				{% for aspect in y_aspects %}
+					<tr>
+						<th scope="row">{{ aspect.name }}</th>
+						{% if loop.index is odd %}
+							{% for universum in first_row_of_universums %}
+								<td>{{ universum.name }}</td>
+							{% endfor %}
+						{% elif loop.index is even %}
+							{% for universum in second_row_of_universums %}
+								<td>{{ universum.name }}</td>
+							{% endfor %}
+						{% endif %}
+					</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr>
+					<th class="invisible"></th>
+					{% for aspect in x_aspects %}
+						<th scope="col">{{ aspect.name }}</th>
+					{% endfor %}
+				</tr>
+			</tfoot>
 		</table>
 	</div>
 {% endblock %}
