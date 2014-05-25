@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Список аспектов {% endblock %}
+
+{% block page_content %}
+	<div class="container">
+		<div class="page-header">
+			<h1>Аспекты</h1>
+		</div>
+	</div>
+	{% for aspect in aspects %}
+		<ul>
+			<li>
+				{{ aspect.name }}
+				<a class="btn btn-default btn-xs"
+				   href="{{ url_for('aspects.delete', id=aspect.id) }}">
+					<span class="glyphicon glyphicon-trash"></span>
+				</a>
+			</li>
+		</ul>
+	{% endfor %}
+	<br>
+	<a class="btn btn-default" href="{{ url_for('aspects.add') }}">
+		<span class="glyphicon glyphicon-plus"></span>
+		Добавить аспект
+	</a>
+{% endblock %}

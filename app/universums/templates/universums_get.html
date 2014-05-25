@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} Список универсумов {% endblock %}
+
+{% block page_content %}
+	<div class="container">
+		<div class="page-header">
+			<h1>Универсумы</h1>
+		</div>
+	</div>
+	{% for universum in universums %}
+		<ul>
+			<li>
+				{{ universum.name }}
+				<a class="btn btn-default btn-xs"
+				   href="{{ url_for('universums.delete', id=universum.id) }}">
+					<span class="glyphicon glyphicon-trash"></span>
+				</a>
+			</li>
+		</ul>
+	{% endfor %}
+	<br>
+	<a class="btn btn-default" href="{{ url_for('universums.add') }}">
+		<span class="glyphicon glyphicon-plus"></span>
+		Добавить универсум
+	</a>
+{% endblock %}

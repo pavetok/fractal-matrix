@@ -20,4 +20,10 @@ def create_app(config_name):
     from .core import core as core_blueprint
     app.register_blueprint(core_blueprint)
 
+    from .aspects import aspects as aspects_blueprint
+    app.register_blueprint(aspects_blueprint, url_prefix='/aspects')
+
+    from .universums import universums as universums_blueprint
+    app.register_blueprint(universums_blueprint, url_prefix='/universums')
+
     return app
