@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Fractal Matrix{% endblock %}
 
@@ -9,7 +8,7 @@
 			<h1>Матрица</h1>
 		</div>
 	</div>
-	<!--Таблица-->
+	<!--Матрица-->
 	<br><br>
 	<div class="container">
 		<table class="table table-bordered">
@@ -18,36 +17,29 @@
 					<tr>
 						<th scope="row">
 							{{ aspect.name }}
-							<button type="button"
-									class="btn btn-default btn-xs"
-									data-toggle="modal"
-									data-target="#entity-action"
-									data-remote="aspects/upd/{{ aspect.id }}">
+							<a class="btn btn-default btn-xs"
+							   href="{{ url_for('aspects.update', id=aspect.id) }}">
 								<span class="glyphicon glyphicon-pencil"></span>
-							</button>
+							</a>
 						</th>
 						{% if loop.index is odd %}
 							{% for universum in first_row_of_universums %}
 								<td>
 									{{ universum.name }}
-									<button type="button"
-											class="btn btn-default btn-xs"
-											data-toggle="modal"
-											data-target="#myModal">
+									<a class="btn btn-default btn-xs"
+									   href="{{ url_for('universums.update', id=universum.id) }}">
 										<span class="glyphicon glyphicon-pencil"></span>
-									</button>
+									</a>
 								</td>
 							{% endfor %}
 						{% elif loop.index is even %}
 							{% for universum in second_row_of_universums %}
 								<td>
 									{{ universum.name }}
-									<button type="button"
-											class="btn btn-default btn-xs"
-											data-toggle="modal"
-											data-target="#myModal">
+									<a class="btn btn-default btn-xs"
+									   href="{{ url_for('universums.update', id=universum.id) }}">
 										<span class="glyphicon glyphicon-pencil"></span>
-									</button>
+									</a>
 								</td>
 							{% endfor %}
 						{% endif %}
@@ -60,17 +52,14 @@
 					{% for aspect in x_aspects %}
 						<th scope="col">
 							{{ aspect.name }}
-							<button type="button"
-									class="btn btn-default btn-xs"
-									data-toggle="modal"
-									data-target="#myModal">
+							<a class="btn btn-default btn-xs"
+							   href="{{ url_for('aspects.update', id=aspect.id) }}">
 								<span class="glyphicon glyphicon-pencil"></span>
-							</button>
+							</a>
 						</th>
 					{% endfor %}
 				</tr>
 			</tfoot>
 		</table>
 	</div>
-	{% include '_modal.html' %}
 {% endblock %}

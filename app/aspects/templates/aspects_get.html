@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Fractal Matrix{% endblock %}
+{% block title %} Список аспектов {% endblock %}
 
 {% block page_content %}
 	<div class="container">
@@ -14,13 +14,9 @@
 			<li>{{ aspect.name }}</li>
 		</ul>
 	{% endfor %}
-	<button type="button"
-			class="btn btn-default"
-			data-toggle="modal"
-			data-target="#entity-action"
-			data-remote="aspects/add">
-		<span class="glyphicon glyphicon-pencil"></span>
+	<br>
+	<a class="btn btn-default" href="{{ url_for('aspects.add') }}">
+		<span class="glyphicon glyphicon-plus"></span>
 		Добавить аспект
-	</button>
-	{% include '_modal.html' %}
+	</a>
 {% endblock %}
