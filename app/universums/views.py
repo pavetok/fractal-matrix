@@ -22,7 +22,9 @@ def add():
     if form.validate_on_submit():
         universum = Universum(name=form.name.data)
         db.session.add(universum)
+        db.session.commit()
         flash('Универсум был добавлен')
+        universum = Universum.query.filter_by(name=universum.name).first()
         return redirect(url_for('.get_by_id', id=universum.id))
     return render_template('universums_add.html', form=form)
 

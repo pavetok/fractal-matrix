@@ -11,7 +11,13 @@
 	</div>
 	{% for universum in universums %}
 		<ul>
-			<li>{{ universum.name }}</li>
+			<li>
+				{{ universum.name }}
+				<a class="btn btn-default btn-xs"
+				   href="{{ url_for('universums.delete', id=universum.id) }}">
+					<span class="glyphicon glyphicon-trash"></span>
+				</a>
+			</li>
 		</ul>
 	{% endfor %}
 	<br>

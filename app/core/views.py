@@ -28,7 +28,7 @@ def index():
         return render_template('index.html',
                                x_aspects=reversed(x_aspects),
                                y_aspects=y_aspects,
-                               first_row_of_universums=first_row_of_universums,
-                               second_row_of_universums=second_row_of_universums)
+                               first_row_of_universums=reversed(list(first_row_of_universums)),
+                               second_row_of_universums=reversed(list(second_row_of_universums)))
     else:
         return render_template('index.html')

@@ -22,7 +22,9 @@ def add():
     if form.validate_on_submit():
         aspect = Aspect(name=form.name.data)
         db.session.add(aspect)
+        db.session.commit()
         flash('Аспект был добавлен')
+        aspect = Aspect.query.filter_by(name=aspect.name).first()
         return redirect(url_for('.get_by_id', id=aspect.id))
     return render_template('aspects_add.html', form=form)
 
