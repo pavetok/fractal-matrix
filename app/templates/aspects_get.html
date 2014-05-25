@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Fractal Matrix{% endblock %}
+
+{% block page_content %}
+	<div class="container">
+		<div class="page-header">
+			<h1>Аспекты</h1>
+		</div>
+	</div>
+	{% for aspect in aspects %}
+		<ul>
+			<li>{{ aspect.name }}</li>
+		</ul>
+	{% endfor %}
+	<button type="button"
+			class="btn btn-default"
+			data-toggle="modal"
+			data-target="#entity-action"
+			data-remote="aspects/add">
+		<span class="glyphicon glyphicon-pencil"></span>
+		Добавить аспект
+	</button>
+	{% include '_modal.html' %}
+{% endblock %}

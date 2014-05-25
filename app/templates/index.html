@@ -4,12 +4,9 @@
 {% block title %}Fractal Matrix{% endblock %}
 
 {% block page_content %}
-	<div class="page-header">
-		<h1>Hello, Stranger!</h1>
-	</div>
-	<div class="row">
-		<div class="col-md-4">
-			{{ wtf.quick_form(form, form_type="inline") }}
+	<div class="container">
+		<div class="page-header">
+			<h1>Матрица</h1>
 		</div>
 	</div>
 	<!--Таблица-->
@@ -19,14 +16,39 @@
 			<tbody>
 				{% for aspect in y_aspects %}
 					<tr>
-						<th scope="row">{{ aspect.name }}</th>
+						<th scope="row">
+							{{ aspect.name }}
+							<button type="button"
+									class="btn btn-default btn-xs"
+									data-toggle="modal"
+									data-target="#entity-action"
+									data-remote="aspects/upd/{{ aspect.id }}">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</button>
+						</th>
 						{% if loop.index is odd %}
 							{% for universum in first_row_of_universums %}
-								<td>{{ universum.name }}</td>
+								<td>
+									{{ universum.name }}
+									<button type="button"
+											class="btn btn-default btn-xs"
+											data-toggle="modal"
+											data-target="#myModal">
+										<span class="glyphicon glyphicon-pencil"></span>
+									</button>
+								</td>
 							{% endfor %}
 						{% elif loop.index is even %}
 							{% for universum in second_row_of_universums %}
-								<td>{{ universum.name }}</td>
+								<td>
+									{{ universum.name }}
+									<button type="button"
+											class="btn btn-default btn-xs"
+											data-toggle="modal"
+											data-target="#myModal">
+										<span class="glyphicon glyphicon-pencil"></span>
+									</button>
+								</td>
 							{% endfor %}
 						{% endif %}
 					</tr>
@@ -36,10 +58,19 @@
 				<tr>
 					<th class="invisible"></th>
 					{% for aspect in x_aspects %}
-						<th scope="col">{{ aspect.name }}</th>
+						<th scope="col">
+							{{ aspect.name }}
+							<button type="button"
+									class="btn btn-default btn-xs"
+									data-toggle="modal"
+									data-target="#myModal">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</button>
+						</th>
 					{% endfor %}
 				</tr>
 			</tfoot>
 		</table>
 	</div>
+	{% include '_modal.html' %}
 {% endblock %}
