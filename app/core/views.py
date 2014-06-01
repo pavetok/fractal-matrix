@@ -7,12 +7,14 @@ from ..models import Aspect, Universum, generate_aspects, generate_universums
 
 @core.route('/gena')
 def gena():
-    generate_aspects()
+    superaspects = Aspect.query.filter_by(superaspect_id=None)
+    generate_aspects(superaspects)
     return redirect(url_for('.index'))
 
 @core.route('/genu')
 def genu():
-    generate_universums()
+    superaspects = Aspect.query.filter_by(superaspect_id=None)
+    generate_universums(superaspects)
     return redirect(url_for('.index'))
 
 @core.route('/')
