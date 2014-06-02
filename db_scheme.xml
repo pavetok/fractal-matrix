@@ -37,42 +37,73 @@
             <type label="SET" length="1" sql="SET" quote=""/>
             <type label="Bit" length="0" sql="bit" quote=""/>
         </group>
-    </datatypes><table x="500" y="341" name="aspect">
+    </datatypes><table x="642" y="485" name="aspect">
     <row name="id" null="1" autoincrement="1">
         <datatype>INTEGER</datatype>
         <default>NULL</default></row>
     <row name="name" null="1" autoincrement="0">
-        <datatype>VARCHAR</datatype>
+        <datatype>VARCHAR(64)</datatype>
         <default>NULL</default></row>
     <row name="superaspect_id" null="1" autoincrement="0">
         <datatype>INTEGER</datatype>
         <default>NULL</default><relation table="aspect" row="id" />
     </row>
+    <row name="table_id" null="1" autoincrement="0">
+        <datatype>INTEGER</datatype>
+        <default>NULL</default><relation table="table" row="id" />
+    </row>
     <key type="PRIMARY" name="">
         <part>id</part>
     </key>
 </table>
-    <table x="492" y="128" name="universum">
+    <table x="642" y="236" name="universum">
         <row name="id" null="1" autoincrement="1">
             <datatype>INTEGER</datatype>
             <default>NULL</default></row>
         <row name="name" null="1" autoincrement="0">
-            <datatype>VARCHAR</datatype>
+            <datatype>VARCHAR(64)</datatype>
             <default>NULL</default></row>
         <row name="superuniversum_id" null="1" autoincrement="0">
             <datatype>INTEGER</datatype>
             <default>NULL</default><relation table="universum" row="id" />
         </row>
+        <row name="table_id" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default><relation table="table" row="id" />
+        </row>
         <key type="PRIMARY" name="">
             <part>id</part>
         </key>
     </table>
-    <table x="768" y="231" name="universum_aspect">
+    <table x="963" y="368" name="universum_aspect">
         <row name="universum_id" null="1" autoincrement="0">
             <datatype>INTEGER</datatype>
             <default>NULL</default><relation table="universum" row="id" />
         </row>
         <row name="aspect_id" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default><relation table="aspect" row="id" />
+        </row>
+        <key type="PRIMARY" name="">
+        </key>
+    </table>
+    <table x="426" y="382" name="table">
+        <row name="id" null="1" autoincrement="1">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default></row>
+        <row name="name" null="1" autoincrement="0">
+            <datatype>VARCHAR(64)</datatype>
+            <default>NULL</default></row>
+        <key type="PRIMARY" name="">
+            <part>id</part>
+        </key>
+    </table>
+    <table x="642" y="382" name="table_dimension">
+        <row name="table_id" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default><relation table="table" row="id" />
+        </row>
+        <row name="dimension_id" null="1" autoincrement="0">
             <datatype>INTEGER</datatype>
             <default>NULL</default><relation table="aspect" row="id" />
         </row>
