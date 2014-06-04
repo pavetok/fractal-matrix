@@ -9,20 +9,20 @@
 		</div>
 		{% for aspect in y_aspects %}
 		<div class="row">
-			<div class="col-md-4">
+			<div class="col-xs-2 with-padding">
 				<div class="pull-right">
 					{{ aspect.name }}
 				</div>
 			</div>
 			{% if loop.index is odd %}
 				{% for universum in first_row_of_universums %}
-				<div class="col-md-4 bordered">
+				<div class="col-xs-4 with-border with-padding with-background">
 					{{ universum.name }}
 				</div>
 				{% endfor %}
 			{% elif loop.index is even %}
 				{% for universum in second_row_of_universums %}
-				<div class="col-md-4 bordered">
+				<div class="col-xs-4 with-border with-padding with-background">
 					{{ universum.name }}
 				</div>
 				{% endfor %}
@@ -30,9 +30,9 @@
 		</div>
 		{% endfor %}
 		<div class="row">
-			<div class="col-md-4"></div>
+			<div class="col-xs-2"></div>
 			{% for aspect in x_aspects %}
-			<div class="col-md-4">
+			<div class="col-xs-4 with-padding">
 				{{ aspect.name }}
 			</div>
 			{% endfor %}
