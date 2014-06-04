@@ -12,30 +12,18 @@
 			<div class="col-md-4">
 				<div class="pull-right">
 					{{ aspect.name }}
-					<a class="btn btn-default btn-xs"
-					   href="{{ url_for('aspects.update', id=aspect.id) }}">
-						<span class="glyphicon glyphicon-pencil"></span>
-					</a>
 				</div>
 			</div>
 			{% if loop.index is odd %}
 				{% for universum in first_row_of_universums %}
 				<div class="col-md-4 bordered">
 					{{ universum.name }}
-					<a class="btn btn-default btn-xs"
-					   href="{{ url_for('universums.update', id=universum.id) }}">
-						<span class="glyphicon glyphicon-pencil"></span>
-					</a>
 				</div>
 				{% endfor %}
 			{% elif loop.index is even %}
 				{% for universum in second_row_of_universums %}
 				<div class="col-md-4 bordered">
 					{{ universum.name }}
-					<a class="btn btn-default btn-xs"
-					   href="{{ url_for('universums.update', id=universum.id) }}">
-						<span class="glyphicon glyphicon-pencil"></span>
-					</a>
 				</div>
 				{% endfor %}
 			{% endif %}
@@ -46,10 +34,6 @@
 			{% for aspect in x_aspects %}
 			<div class="col-md-4">
 				{{ aspect.name }}
-				<a class="btn btn-default btn-xs"
-				   href="{{ url_for('aspects.update', id=aspect.id) }}">
-					<span class="glyphicon glyphicon-pencil"></span>
-				</a>
 			</div>
 			{% endfor %}
 		</div>
