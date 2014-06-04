@@ -4,6 +4,6 @@
 
 # Directories
 .idea
-venv
+virtenv
 dist
 *egg*
