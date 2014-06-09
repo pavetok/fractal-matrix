@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 import unittest
 from app import create_app, db
-from app.models import Aspect, Universum, generate_aspects, generate_universums
+from app.models import Aspect, Universum, Dimension, \
+    generate_aspects, generate_universums
 
 
 class ModelTestCase(unittest.TestCase):
@@ -20,15 +21,15 @@ class ModelTestCase(unittest.TestCase):
         # готовим данные
         aspect_1 = Aspect(name='Неизменность')
         db.session.add(aspect_1)
-        aspect_1_1 = Aspect(name='Неизменная Неизменность', superaspect=aspect_1)
+        aspect_1_1 = Aspect(name='Неизменность Неизменность', superaspect=aspect_1)
         db.session.add(aspect_1_1)
         db.session.commit()
         # получаем данные
         superaspect = Aspect.query.filter_by(name='Неизменность').first()
-        subaspect = Aspect.query.filter_by(name='Неизменная Неизменность').first()
+        subaspect = Aspect.query.filter_by(name='Неизменность Неизменность').first()
         # делаем проверки
         self.assertTrue(superaspect.name == 'Неизменность')
-        self.assertTrue(superaspect.subaspects[0].name == 'Неизменная Неизменность')
+        self.assertTrue(superaspect.subaspects[0].name == 'Неизменность Неизменность')
         self.assertTrue(subaspect.superaspect.name == 'Неизменность')
 
     def test_universum_creation(self):
@@ -61,6 +62,19 @@ class ModelTestCase(unittest.TestCase):
         aspects = Aspect.query.filter(Aspect.superaspect_id != None)
         # делаем проверки
         self.assertTrue(aspects[0].name == 'Неизменность Неизменность')
+
+    def test_dimension_creation(self):
+        # готовим данные
+        aspect_1 = Aspect(name='Неизменность')
+        db.session.add(aspect_1)
+        dimension_1 = Dimension(label='Форма', aspect=aspect_1)
+        db.session.add(dimension_1)
+        db.session.commit()
+        # получаем данные
+        dimension_1 = Dimension.query.filter(Dimension.label == 'Форма').first()
+        # делаем проверки
+        self.assertTrue(dimension_1.label == 'Форма')
+        self.assertTrue(dimension_1.aspect.name == 'Неизменность')
 
     def test_level(self):
         # готовим данные
