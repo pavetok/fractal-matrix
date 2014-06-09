@@ -36,6 +36,13 @@ class Aspect(db.Model):
                                  cascade='all, delete-orphan',
                                  backref=db.backref('superaspect', remote_side=id))
 
+    @property
+    def level(self):
+        if self.superaspect is None:
+            return 1
+        else:
+            return self.superaspect.level + 1
+
     @staticmethod
     def update_dependent(superaspect, new_name, old_name, initiator):
         for aspect in superaspect.subaspects:
@@ -64,6 +71,15 @@ class Universum(db.Model):
                                     backref=db.backref('superuniversum', remote_side=id))
     aspects = db.relationship('Aspect', secondary=universum_aspect,
                               backref=db.backref('universums', lazy='dynamic'))
+
+    @property
+    def level(self):
+        current_level = 1
+        if self.superuniversum is None:
+            return current_level
+        else:
+            current_level += 1
+            return self.superuniversum.level
 
     @staticmethod
     def update_dependent(superuniversum, new_name, old_name, initiator):
