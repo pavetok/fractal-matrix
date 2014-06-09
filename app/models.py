@@ -10,6 +10,7 @@ def generate_aspects(superaspects):
             db.session.add(subaspect)
     db.session.commit()
 
+
 def generate_universums(superaspects):
     if len(list(superaspects)) == 2:
         (x_aspects, y_aspects) = (superaspect.subaspects for superaspect in superaspects)
@@ -20,10 +21,11 @@ def generate_universums(superaspects):
                 db.session.add(universum)
         db.session.commit()
 
+
 universum_aspect = db.Table('universum_aspect',
                    db.Column('universum_id', db.Integer, db.ForeignKey('universum.id')),
-                   db.Column('aspect_id', db.Integer, db.ForeignKey('aspect.id'))
-)
+                   db.Column('aspect_id', db.Integer, db.ForeignKey('aspect.id')))
+
 
 class Aspect(db.Model):
     __tablename__ = 'aspect'
@@ -34,8 +36,23 @@ class Aspect(db.Model):
                                  cascade='all, delete-orphan',
                                  backref=db.backref('superaspect', remote_side=id))
 
+    @staticmethod
+    def update_dependent(superaspect, new_name, old_name, initiator):
+        for aspect in superaspect.subaspects:
+            if old_name in aspect.name:
+                aspect.name = aspect.name.replace(old_name, new_name)
+                db.session.add(aspect)
+        for universum in superaspect.universums:
+            if old_name in universum.name:
+                universum.name = universum.name.replace(old_name, new_name)
+                db.session.add(universum)
+        db.session.commit()
+
     def __repr__(self):
         return '<Aspect: {}>'.format(self.name)
+# события
+db.event.listen(Aspect.name, 'set', Aspect.update_dependent)
+
 
 class Universum(db.Model):
     __tablename__ = 'universum'
@@ -48,5 +65,15 @@ class Universum(db.Model):
     aspects = db.relationship('Aspect', secondary=universum_aspect,
                               backref=db.backref('universums', lazy='dynamic'))
 
+    @staticmethod
+    def update_dependent(superuniversum, new_name, old_name, initiator):
+        for universum in superuniversum.subuniversums:
+            if old_name in universum.name:
+                universum.name = universum.name.replace(old_name, new_name)
+                db.session.add(universum)
+        db.session.commit()
+
     def __repr__(self):
         return '<Universum: {}>'.format(self.name)
+# события
+db.event.listen(Universum.name, 'set', Universum.update_dependent)
