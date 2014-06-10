@@ -20,6 +20,9 @@ def create_app(config_name):
     from .core import core as core_blueprint
     app.register_blueprint(core_blueprint)
 
+    from .dimensions import dimensions as dimensions_blueprint
+    app.register_blueprint(dimensions_blueprint, url_prefix='/dimensions')
+
     from .aspects import aspects as aspects_blueprint
     app.register_blueprint(aspects_blueprint, url_prefix='/aspects')
 

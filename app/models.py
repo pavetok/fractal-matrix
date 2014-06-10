@@ -96,7 +96,7 @@ db.event.listen(Universum.name, 'set', Universum.update_dependent)
 class Dimension(db.Model):
     __tablename__ = 'dimension'
     id = db.Column(db.Integer, primary_key=True)
-    label = db.Column(db.String(64), unique=True)
+    name = db.Column(db.String(64), unique=True)
     aspect_id = db.Column(db.Integer, db.ForeignKey('aspect.id'))
     aspect = db.relationship('Aspect', uselist=False, backref='dimension')
 

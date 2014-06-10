@@ -114,7 +114,7 @@
         <row name="id" null="1" autoincrement="1">
             <datatype>INTEGER</datatype>
             <default>NULL</default></row>
-        <row name="label" null="1" autoincrement="0">
+        <row name="name" null="1" autoincrement="0">
             <datatype>VARCHAR(64)</datatype>
             <default>NULL</default></row>
         <row name="aspect_id" null="1" autoincrement="0">
