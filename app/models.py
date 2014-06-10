@@ -74,12 +74,10 @@ class Universum(db.Model):
 
     @property
     def level(self):
-        current_level = 1
-        if self.superuniversum is None:
-            return current_level
+        if self.subuniversum is None:
+            return 1
         else:
-            current_level += 1
-            return self.superuniversum.level
+            return self.subuniversum.level + 1
 
     @staticmethod
     def update_dependent(superuniversum, new_name, old_name, initiator):
@@ -93,3 +91,14 @@ class Universum(db.Model):
         return '<Universum: {}>'.format(self.name)
 # события
 db.event.listen(Universum.name, 'set', Universum.update_dependent)
+
+
+class Dimension(db.Model):
+    __tablename__ = 'dimension'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    aspect_id = db.Column(db.Integer, db.ForeignKey('aspect.id'))
+    aspect = db.relationship('Aspect', uselist=False, backref='dimension')
+
+    def __repr__(self):
+        return '<Dimension: {}>'.format(self.label)
