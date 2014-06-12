@@ -16,8 +16,8 @@ def get(id=None):
         aspect = Aspect.query.get_or_404(id)
         return render_template('aspects_get_by_id.html', aspect=aspect)
 
-@aspects.route('/create', methods=['GET', 'POST'])
-def create():
+@aspects.route('/add', methods=['GET', 'POST'])
+def add():
     form = AspectForm()
     if form.validate_on_submit():
         aspect = Aspect(name=form.name.data)
@@ -26,7 +26,7 @@ def create():
         flash('Аспект был добавлен')
         aspect = Aspect.query.filter_by(name=aspect.name).first()
         return redirect(url_for('.get', id=aspect.id))
-    return render_template('aspects_create.html', form=form)
+    return render_template('aspects_add.html', form=form)
 
 @aspects.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):

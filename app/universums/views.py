@@ -16,8 +16,8 @@ def get(id=None):
         universum = Universum.query.get_or_404(id)
         return render_template('universums_get_by_id.html', universum=universum)
 
-@universums.route('/create', methods=['GET', 'POST'])
-def create():
+@universums.route('/add', methods=['GET', 'POST'])
+def add():
     form = UniversumForm()
     if form.validate_on_submit():
         universum = Universum(name=form.name.data)
@@ -26,7 +26,7 @@ def create():
         flash('Универсум был добавлен')
         universum = Universum.query.filter_by(name=universum.name).first()
         return redirect(url_for('.get', id=universum.id))
-    return render_template('universums_create.html', form=form)
+    return render_template('universums_add.html', form=form)
 
 @universums.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):
