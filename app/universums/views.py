@@ -6,18 +6,18 @@ from ..models import Universum
 from .forms import UniversumForm
 
 
-@universums.route('/get', methods=['GET'])
-def get():
-    universums = Universum.query.all()
-    return render_template('universums_get.html', universums=universums)
+@universums.route('')
+@universums.route('/<int:id>')
+def get(id=None):
+    if id is None:
+        universums = Universum.query.all()
+        return render_template('universums_get.html', universums=universums)
+    else:
+        universum = Universum.query.get_or_404(id)
+        return render_template('universums_get_by_id.html', universum=universum)
 
-@universums.route('/get/<int:id>', methods=['GET'])
-def get_by_id(id):
-    universum = Universum.query.get_or_404(id)
-    return render_template('universums_get_by_id.html', universum=universum)
-
-@universums.route('/add', methods=['GET', 'POST'])
-def add():
+@universums.route('/create', methods=['GET', 'POST'])
+def create():
     form = UniversumForm()
     if form.validate_on_submit():
         universum = Universum(name=form.name.data)
@@ -25,8 +25,8 @@ def add():
         db.session.commit()
         flash('Универсум был добавлен')
         universum = Universum.query.filter_by(name=universum.name).first()
-        return redirect(url_for('.get_by_id', id=universum.id))
-    return render_template('universums_add.html', form=form)
+        return redirect(url_for('.get', id=universum.id))
+    return render_template('universums_create.html', form=form)
 
 @universums.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):
@@ -36,9 +36,9 @@ def update(id):
         universum.name = form.name.data
         db.session.commit()
         flash('Универсум был изменен')
-        return redirect(url_for('.get_by_id', id=universum.id))
+        return redirect(url_for('.get', id=universum.id))
     form.name.data = universum.name
-    return render_template('universums_upd.html', form=form)
+    return render_template('universums_update.html', form=form)
 
 @universums.route('/delete/<int:id>', methods=['GET', 'POST'])
 def delete(id):

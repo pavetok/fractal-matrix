@@ -6,18 +6,18 @@ from ..models import Dimension, Aspect
 from .forms import DimensionForm
 
 
-@dimensions.route('/get', methods=['GET'])
-def get():
-    dimensions = Dimension.query.all()
-    return render_template('dimensions_get.html', dimensions=dimensions)
+@dimensions.route('')
+@dimensions.route('/<int:id>')
+def get(id=None):
+    if id is None:
+        dimensions = Dimension.query.all()
+        return render_template('dimensions_get.html', dimensions=dimensions)
+    else:
+        dimension = Dimension.query.get_or_404(id)
+        return render_template('dimensions_get_by_id.html', dimension=dimension)
 
-@dimensions.route('/get/<int:id>', methods=['GET'])
-def get_by_id(id):
-    dimension = Dimension.query.get_or_404(id)
-    return render_template('dimensions_get_by_id.html', dimension=dimension)
-
-@dimensions.route('/add', methods=['GET', 'POST'])
-def add():
+@dimensions.route('/create', methods=['GET', 'POST'])
+def create():
     form = DimensionForm()
     superaspects = Aspect.query.filter_by(superaspect=None).order_by('name')
     form.aspect.choices = [(aspect.id, aspect.name) for aspect in superaspects]
@@ -28,8 +28,8 @@ def add():
         db.session.commit()
         flash('Измерение было добавлено')
         dimension = Dimension.query.filter_by(name=dimension.name).first()
-        return redirect(url_for('.get_by_id', id=dimension.id))
-    return render_template('dimensions_add.html', form=form)
+        return redirect(url_for('.get', id=dimension.id))
+    return render_template('dimensions_create.html', form=form)
 
 @dimensions.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):
@@ -39,9 +39,9 @@ def update(id):
         dimension.name = form.name.data
         db.session.commit()
         flash('Измерение было изменено')
-        return redirect(url_for('.get_by_id', id=dimension.id))
+        return redirect(url_for('.get', id=dimension.id))
     form.name.data = dimension.name
-    return render_template('dimensions_upd.html', form=form)
+    return render_template('dimensions_update.html', form=form)
 
 @dimensions.route('/delete/<int:id>', methods=['GET', 'POST'])
 def delete(id):
