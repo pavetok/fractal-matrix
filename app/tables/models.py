@@ -1,5 +1,8 @@
 # -*- coding:utf-8 -*-
-from . import db
+from .. import db
+
+
+__all__ = ['Table', 'Aspect', 'Universum', 'Dimension']
 
 
 def generate_aspects(superaspects):
@@ -22,6 +25,19 @@ def generate_universums(superaspects):
         db.session.commit()
 
 
+class Table(db.Model):
+    __tablename__ = 'table'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    aspects = db.relationship('Aspect', backref='table', lazy='dynamic')
+    universums = db.relationship('Universum', backref='table', lazy='dynamic')
+    dimensions = db.relationship('Dimension', backref='table', lazy='dynamic')
+    # hypostases = None
+
+    def __repr__(self):
+        return '<Table: {}>'.format(self.name)
+
+
 universum_aspect = db.Table('universum_aspect',
                    db.Column('universum_id', db.Integer, db.ForeignKey('universum.id')),
                    db.Column('aspect_id', db.Integer, db.ForeignKey('aspect.id')))
@@ -31,6 +47,7 @@ class Aspect(db.Model):
     __tablename__ = 'aspect'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     superaspect_id = db.Column(db.Integer, db.ForeignKey(id))
     subaspects = db.relationship('Aspect',
                                  cascade='all, delete-orphan',
@@ -65,6 +82,7 @@ class Universum(db.Model):
     __tablename__ = 'universum'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     superuniversum_id = db.Column(db.Integer, db.ForeignKey(id))
     subuniversums = db.relationship('Universum',
                                     cascade='all, delete-orphan',
@@ -97,8 +115,9 @@ class Dimension(db.Model):
     __tablename__ = 'dimension'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     aspect_id = db.Column(db.Integer, db.ForeignKey('aspect.id'))
     aspect = db.relationship('Aspect', uselist=False, backref='dimension')
 
     def __repr__(self):
-        return '<Dimension: {}>'.format(self.label)
+        return '<Dimension: {}>'.format(self.name)

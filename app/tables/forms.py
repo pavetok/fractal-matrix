@@ -4,6 +4,6 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 
-class AspectForm(Form):
+class BaseEntityForm(Form):
     name = StringField('Имя', validators=[DataRequired()])
     submit = SubmitField('ok')

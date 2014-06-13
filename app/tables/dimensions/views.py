@@ -16,8 +16,8 @@ def get(id=None):
         dimension = Dimension.query.get_or_404(id)
         return render_template('dimensions_get_by_id.html', dimension=dimension)
 
-@dimensions.route('/add', methods=['GET', 'POST'])
-def add():
+@dimensions.route('/create', methods=['GET', 'POST'])
+def create():
     form = DimensionForm()
     superaspects = Aspect.query.filter_by(superaspect=None).order_by('name')
     form.aspect.choices = [(aspect.id, aspect.name) for aspect in superaspects]
@@ -26,10 +26,10 @@ def add():
                               aspect=Aspect.query.get(form.aspect.data))
         db.session.add(dimension)
         db.session.commit()
-        flash('Измерение было добавлено')
+        flash('Измерение было создано')
         dimension = Dimension.query.filter_by(name=dimension.name).first()
         return redirect(url_for('.get', id=dimension.id))
-    return render_template('dimensions_add.html', form=form)
+    return render_template('dimensions_create.html', form=form)
 
 @dimensions.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):

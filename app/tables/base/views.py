@@ -1,23 +1,23 @@
 # -*- coding:utf-8 -*-
 from flask import render_template, url_for, flash, redirect
-from . import core
-from .. import db
+from .. import tables
+from ... import db
 from ..models import Aspect, Universum, generate_aspects, generate_universums
 
 
-@core.route('/gena')
+@tables.route('/gena')
 def gena():
     superaspects = Aspect.query.filter_by(superaspect_id=None)
     generate_aspects(superaspects)
     return redirect(url_for('.index'))
 
-@core.route('/genu')
+@tables.route('/genu')
 def genu():
     superaspects = Aspect.query.filter_by(superaspect_id=None)
     generate_universums(superaspects)
     return redirect(url_for('.index'))
 
-@core.route('/')
+@tables.route('/')
 def index():
     universums = Universum.query.all()
     first_row_of_universums = (universum for universum in universums if \

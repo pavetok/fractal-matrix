@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %} Информация о таблице {% endblock %}
+
+{% block page_content %}
+	<div class="container">
+		<div class="page-header">
+			<h1>Таблица</h1>
+		</div>
+			Идентификатор: {{ table.id }}
+			<br>
+			Имя: {{ table.name }}
+	</div>
+{% endblock %}

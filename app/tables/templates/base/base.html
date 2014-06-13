@@ -3,7 +3,7 @@
 <!--head-->
 {% block head %}
 	{{ super() }}
-	<link rel="stylesheet" href="{{ url_for('core.static', filename='styles.css') }}">
+	<link rel="stylesheet" href="{{ url_for('tables.static', filename='/base/styles.css') }}">
 {% endblock %}
 <!--navbar-->
 {% block navbar %}
@@ -16,11 +16,11 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="{{ url_for('core.index') }}">СМЫСЛ</a>
+				<a class="navbar-brand" href="{{ url_for('tables.index') }}">СМЫСЛ</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="{{ url_for('core.index') }}">Таблица</a></li>
+					<li><a href="{{ url_for('tables.get') }}">Таблицы</a></li>
 				</ul>
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url_for('dimensions.get') }}">Измерения</a></li>

@@ -3,7 +3,7 @@ from flask import render_template, url_for, flash, redirect
 from . import universums
 from .. import db
 from ..models import Universum
-from .forms import UniversumForm
+from .app.tables.universums.forms import UniversumForm
 
 
 @universums.route('')
@@ -16,17 +16,17 @@ def get(id=None):
         universum = Universum.query.get_or_404(id)
         return render_template('universums_get_by_id.html', universum=universum)
 
-@universums.route('/add', methods=['GET', 'POST'])
-def add():
+@universums.route('/create', methods=['GET', 'POST'])
+def create():
     form = UniversumForm()
     if form.validate_on_submit():
         universum = Universum(name=form.name.data)
         db.session.add(universum)
         db.session.commit()
-        flash('Универсум был добавлен')
+        flash('Универсум был создан')
         universum = Universum.query.filter_by(name=universum.name).first()
         return redirect(url_for('.get', id=universum.id))
-    return render_template('universums_add.html', form=form)
+    return render_template('universums_create.html', form=form)
 
 @universums.route('/update/<int:id>', methods=['GET', 'POST'])
 def update(id):
