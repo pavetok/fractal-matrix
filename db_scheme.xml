@@ -37,7 +37,7 @@
             <type label="SET" length="1" sql="SET" quote=""/>
             <type label="Bit" length="0" sql="bit" quote=""/>
         </group>
-    </datatypes><table x="600" y="530" name="aspect">
+    </datatypes><table x="669" y="567" name="aspect">
     <row name="id" null="1" autoincrement="1">
         <datatype>INTEGER</datatype>
         <default>NULL</default></row>
@@ -56,7 +56,7 @@
         <part>id</part>
     </key>
 </table>
-    <table x="642" y="236" name="universum">
+    <table x="668" y="240" name="universum">
         <row name="id" null="1" autoincrement="1">
             <datatype>INTEGER</datatype>
             <default>NULL</default></row>
@@ -98,19 +98,7 @@
             <part>id</part>
         </key>
     </table>
-    <table x="642" y="382" name="table_dimension">
-        <row name="table_id" null="1" autoincrement="0">
-            <datatype>INTEGER</datatype>
-            <default>NULL</default><relation table="table" row="id" />
-        </row>
-        <row name="dimension_id" null="1" autoincrement="0">
-            <datatype>INTEGER</datatype>
-            <default>NULL</default><relation table="dimension" row="id" />
-        </row>
-        <key type="PRIMARY" name="">
-        </key>
-    </table>
-    <table x="893" y="525" name="dimension">
+    <table x="665" y="400" name="dimension">
         <row name="id" null="1" autoincrement="1">
             <datatype>INTEGER</datatype>
             <default>NULL</default></row>
@@ -120,6 +108,10 @@
         <row name="aspect_id" null="1" autoincrement="0">
             <datatype>INTEGER</datatype>
             <default>NULL</default><relation table="aspect" row="id" />
+        </row>
+        <row name="table_id" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default><relation table="table" row="id" />
         </row>
         <key type="PRIMARY" name="">
             <part>id</part>
