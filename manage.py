@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
 from app import create_app, db
-from app.tables.models import Table, Aspect, Universum, Dimension
+from app.web.models import Table, Aspect, Universum, Dimension
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import unittest
 from app import create_app, db
-from app.models import Aspect, Universum, Dimension, \
+from app.web.models import Table, Aspect, Universum, Dimension, \
     generate_aspects, generate_universums
 
 
@@ -16,6 +16,21 @@ class ModelTestCase(unittest.TestCase):
     def tearDown(self):
         db.session.remove()
         self.app_context.pop()
+
+    def test_table_creation(self):
+        # готовим данные
+        table = Table(name='Мир')
+        aspect_1 = Aspect(name='Неизменность')
+        aspect_2 = Aspect(name='Единство')
+        table.aspects.extend((aspect_1, aspect_2))
+        db.session.add(table)
+        db.session.commit()
+        superaspects = Aspect.query.filter(Aspect.superaspect_id == None)
+        generate_aspects(table, superaspects)
+        # получаем данные
+        table = Table.query.get(table.id)
+        # делаем проверки
+        self.assertTrue(table.aspects[0].name == 'Неизменность')
 
     def test_aspect_creation(self):
         # готовим данные
@@ -48,20 +63,6 @@ class ModelTestCase(unittest.TestCase):
         # делаем проверки
         self.assertTrue(aspect.universums[0].name == 'Неизменность Единство Неизменность Неизменность')
         self.assertTrue(universum.aspects[0].name == 'Неизменность Единство')
-
-    def test_table_creation(self):
-        # готовим данные
-        aspect_1 = Aspect(name='Неизменность')
-        db.session.add(aspect_1)
-        aspect_2 = Aspect(name='Единство')
-        db.session.add(aspect_2)
-        db.session.commit()
-        superaspects = Aspect.query.filter(Aspect.superaspect_id == None)
-        generate_aspects(superaspects)
-        # получаем данные
-        aspects = Aspect.query.filter(Aspect.superaspect_id != None)
-        # делаем проверки
-        self.assertTrue(aspects[0].name == 'Неизменность Неизменность')
 
     def test_dimension_creation(self):
         # готовим данные
