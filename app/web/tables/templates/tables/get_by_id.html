@@ -3,12 +3,39 @@
 {% block title %} Информация о таблице {% endblock %}
 
 {% block page_content %}
-	<div class="container">
-		<div class="page-header">
-			<h1>Таблица</h1>
-		</div>
-			Идентификатор: {{ table.id }}
-			<br>
-			Имя: {{ table.name }}
+<div class="container">
+	<div class="page-header">
+		<h1>{{ table.name }}</h1>
 	</div>
+	{% for aspect in y_aspects %}
+	<div class="row">
+		<div class="col-xs-2 with-padding">
+			<div class="pull-right">
+				{{ aspect.name }}
+			</div>
+		</div>
+		{% if loop.index is odd %}
+		{% for universum in first_row_of_universums %}
+		<div class="col-xs-4 with-border with-padding with-background">
+			{{ universum.name }}
+		</div>
+		{% endfor %}
+		{% elif loop.index is even %}
+		{% for universum in second_row_of_universums %}
+		<div class="col-xs-4 with-border with-padding with-background">
+			{{ universum.name }}
+		</div>
+		{% endfor %}
+		{% endif %}
+	</div>
+	{% endfor %}
+	<div class="row">
+		<div class="col-xs-2"></div>
+		{% for aspect in x_aspects %}
+		<div class="col-xs-4 with-padding">
+			{{ aspect.name }}
+		</div>
+		{% endfor %}
+	</div>
+</div>
 {% endblock %}

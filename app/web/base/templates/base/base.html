@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}Fractal Table{% endblock %}
+{% block title %} Fractal Table {% endblock %}
 
 <!--head-->
 {% block head %}
@@ -22,19 +22,8 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="{{ url_for('tables.get') }}">Таблицы</a></li>
+				<li><a href="{{ url_for('tables.get') }}">Список таблиц</a></li>
 			</ul>
-			{% if table %}
-			<ul class="nav navbar-nav">
-			<li><a href="{{ url_for('dimensions.get', table_id=table.id) }}">Измерения</a></li>
-			</ul>
-			<ul class="nav navbar-nav">
-			<li><a href="{{ url_for('aspects.get', table_id=table.id) }}">Аспекты</a></li>
-			</ul>
-			<ul class="nav navbar-nav">
-			<li><a href="{{ url_for('universums.get', table_id=table.id) }}">Универсумы</a></li>
-			</ul>
-			{% endif %}
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -61,6 +50,23 @@
 			{{ message }}
 		</div>
 		{% endfor %}
+		<!--table submenu-->
+		{% if table %}
+		<div class="btn-group">
+			<a class="btn btn-link"
+			   href="{{ url_for('tables.get', table_id=table.id) }}"
+			   role="button">Таблица</a>
+			<a class="btn btn-link"
+			   href="{{ url_for('dimensions.get', table_id=table.id) }}"
+			   role="button">Измерения</a>
+			<a class="btn btn-link"
+			   href="{{ url_for('aspects.get', table_id=table.id) }}"
+			   role="button">Аспекты</a>
+			<a class="btn btn-link"
+			   href="{{ url_for('universums.get', table_id=table.id) }}"
+			   role="button">Универсумы</a>
+		</div>
+		{% endif %}
 		<!--page content-->
 		{% block page_content %}
 		{% endblock %}
