@@ -2,13 +2,16 @@
 from .. import db
 
 
-__all__ = ['Table', 'Aspect', 'Universum', 'Dimension']
-
+table_level = db.Table('table_level',
+                       db.Column('table_id', db.Integer, db.ForeignKey('table.id')),
+                       db.Column('level_id', db.Integer, db.ForeignKey('level.id')))
 
 class Table(db.Model):
     __tablename__ = 'table'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    levels = db.relationship('Level', secondary=table_level,
+                             backref=db.backref('tables', lazy='dynamic'))
     aspects = db.relationship('Aspect', backref='table', lazy='dynamic')
     universums = db.relationship('Universum', backref='table', lazy='dynamic')
     dimensions = db.relationship('Dimension', backref='table', lazy='dynamic')
@@ -18,16 +21,27 @@ class Table(db.Model):
         return '<Table: {}>'.format(self.name)
 
 
-universum_aspect = db.Table('universum_aspect',
-                   db.Column('universum_id', db.Integer, db.ForeignKey('universum.id')),
-                   db.Column('aspect_id', db.Integer, db.ForeignKey('aspect.id')))
+class Level(db.Model):
+    __tablename__ = 'level'
+    id = db.Column(db.Integer, primary_key=True)
+    label = db.Column(db.String(64), unique=True)
+    aspects = db.relationship('Aspect', backref='level', lazy='dynamic')
+    universums = db.relationship('Universum', backref='level', lazy='dynamic')
 
+    def __repr__(self):
+        return '<Level: {}>'.format(self.name)
+
+
+universum_aspect = db.Table('universum_aspect',
+                            db.Column('universum_id', db.Integer, db.ForeignKey('universum.id')),
+                            db.Column('aspect_id', db.Integer, db.ForeignKey('aspect.id')))
 
 class Aspect(db.Model):
     __tablename__ = 'aspect'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
+    level_id = db.Column(db.Integer, db.ForeignKey('level.id'))
     superaspect_id = db.Column(db.Integer, db.ForeignKey(id))
     subaspects = db.relationship('Aspect',
                                  cascade='all, delete-orphan',
@@ -44,13 +58,6 @@ class Aspect(db.Model):
                 subaspect.superaspect = primary_aspect
                 db.session.add(subaspect)
         db.session.commit()
-
-    @property
-    def level(self):
-        if self.superaspect is None:
-            return 1
-        else:
-            return self.superaspect.level + 1
 
     @staticmethod
     def update_dependent(superaspect, new_name, old_name, initiator):
@@ -75,6 +82,7 @@ class Universum(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
+    level_id = db.Column(db.Integer, db.ForeignKey('level.id'))
     superuniversum_id = db.Column(db.Integer, db.ForeignKey(id))
     subuniversums = db.relationship('Universum',
                                     cascade='all, delete-orphan',
@@ -95,13 +103,6 @@ class Universum(db.Model):
                     universum.aspects = [y_aspect, x_aspect]
                     db.session.add(universum)
             db.session.commit()
-
-    @property
-    def level(self):
-        if self.subuniversum is None:
-            return 1
-        else:
-            return self.subuniversum.level + 1
 
     @staticmethod
     def update_dependent(superuniversum, new_name, old_name, initiator):
