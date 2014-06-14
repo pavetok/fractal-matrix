@@ -50,26 +50,41 @@
 		{{ message }}
 	</div>
 	{% endfor %}
+
 	<!--table submenu-->
 	{% if table %}
 	<div class="btn-group">
-		<a class="btn btn-link"
-		   href="{{ url_for('tables.get', table_id=table.id) }}"
-		   role="button">Таблица</a>
-		<a class="btn btn-link"
+		<div class="btn-group">
+			<a class="btn btn-default dropdown-toggle"
+			   data-toggle="dropdown"
+			   role="button">Таблица
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a class="btn btn-link"
+					   href="{{ url_for('tables.get', table_id=table.id) }}"
+					   role="button">1 уровень</a></li>
+				<li><a class="btn btn-link"
+					   href="{{ url_for('tables.get', table_id=table.id) }}"
+					   role="button">2 уровень</a></li>
+			</ul>
+		</div>
+		<a class="btn btn-default"
 		   href="{{ url_for('dimensions.get', table_id=table.id) }}"
 		   role="button">Измерения</a>
-		<a class="btn btn-link"
+		<a class="btn btn-default"
 		   href="{{ url_for('aspects.get', table_id=table.id) }}"
 		   role="button">Аспекты</a>
-		<a class="btn btn-link"
+		<a class="btn btn-default"
 		   href="{{ url_for('universums.get', table_id=table.id) }}"
 		   role="button">Универсумы</a>
 	</div>
 	{% endif %}
+
 	<!--page content-->
 	{% block page_content %}
 	{% endblock %}
+
 </div>
 {% endblock %}
 
