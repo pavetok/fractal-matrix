@@ -119,12 +119,12 @@ class Universum(db.Model):
     @staticmethod
     def generate(table, level):
         dimensions_aspects = (dimension.get_aspects(level) for dimension in table.dimensions)
-        for x_aspect, y_aspect in product(*dimensions_aspects):
+        for aspects in product(*dimensions_aspects):
             universum = Universum()
-            universum.name = "{0}; {1}".format(y_aspect.name, x_aspect.name)
+            universum.name = '; '.join(reversed([aspect.name for aspect in aspects]))
             universum.table = table
             universum.level = level
-            universum.aspects.extend((y_aspect, x_aspect))
+            universum.aspects.extend(reversed(aspects))
             db.session.add(universum)
         db.session.commit()
 
