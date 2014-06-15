@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from itertools import product
 from .. import db
 
 
@@ -12,7 +13,12 @@ class Table(db.Model):
     dimensions = db.relationship('Dimension', backref='table', lazy='dynamic')
 
     def generate(self, level):
-        if level not in self.levels:
+        if level in self.levels.all():
+            raise Exception('{} already exist'.format(level))
+        else:
+            level.table = self
+            db.session.add(level)
+            db.session.commit()
             Aspect.generate(self, level)
             Universum.generate(self, level)
 
@@ -27,6 +33,10 @@ class Level(db.Model):
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     aspects = db.relationship('Aspect', backref='level', lazy='dynamic')
     universums = db.relationship('Universum', backref='level', lazy='dynamic')
+
+    @property
+    def prev(self):
+        return self.table.levels.filter_by(value=self.value-1).first()
 
     def __repr__(self):
         return '<Level: {}>'.format(self.value)
@@ -59,17 +69,18 @@ class Aspect(db.Model):
         return aspects_with_level
 
     @staticmethod
-    def generate(table, level=None):
+    def generate(table, level):
         superaspects = Aspect.query.filter_by(superaspect_id=None)
-        if not level:
-            base_aspects = superaspects
+        if level.prev:
+            aspects_with_level = table.aspects.filter_by(level_id=level.prev.id).all()
         else:
-            base_aspects = Table.aspects.filter_by(level_id=level.id)
-        for base_aspect in base_aspects:
-            for mixin_aspect in superaspects:
-                aspect = Aspect(name="{0}; {1}".format(mixin_aspect.name,
-                                                       base_aspect.name))
+            aspects_with_level = None
+        base_aspects = aspects_with_level if aspects_with_level else superaspects
+        for base_aspect, mixin_aspect in product(base_aspects, superaspects):
+                aspect = Aspect()
+                aspect.name = "{0}, {1}".format(mixin_aspect.name, base_aspect.name)
                 aspect.table = table
+                aspect.level = level
                 aspect.superaspect = base_aspect
                 db.session.add(aspect)
         db.session.commit()
@@ -106,17 +117,15 @@ class Universum(db.Model):
                               backref=db.backref('universums', lazy='dynamic'))
 
     @staticmethod
-    def generate(table, level=None):
-        superaspects = Aspect.query.filter_by(superaspect_id=None)
-        superaspects = Aspect.query.filter_by(level_id=level.id)
-        (x_aspects, y_aspects) = (superaspect.subaspects for superaspect in superaspects)
-        for x_aspect in x_aspects:
-            for y_aspect in y_aspects:
-                universum = Universum(name="{0}; {1}".format(y_aspect.name,
-                                                             x_aspect.name))
-                universum.table = table
-                universum.aspects = [y_aspect, x_aspect]
-                db.session.add(universum)
+    def generate(table, level):
+        dimensions_aspects = (dimension.get_aspects(level) for dimension in table.dimensions)
+        for x_aspect, y_aspect in product(*dimensions_aspects):
+            universum = Universum()
+            universum.name = "{0}; {1}".format(y_aspect.name, x_aspect.name)
+            universum.table = table
+            universum.level = level
+            universum.aspects.extend((y_aspect, x_aspect))
+            db.session.add(universum)
         db.session.commit()
 
     @staticmethod
