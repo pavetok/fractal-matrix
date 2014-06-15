@@ -1,8 +1,7 @@
 # -*- coding:utf-8 -*-
 import unittest
 from app import create_app, db
-from app.web.models import Table, Aspect, Universum, Dimension, \
-    generate_aspects, generate_universums
+from app.web.models import Table, Aspect, Universum, Dimension, Level
 
 
 class ModelTestCase(unittest.TestCase):
@@ -25,8 +24,7 @@ class ModelTestCase(unittest.TestCase):
         table.aspects.extend((aspect_1, aspect_2))
         db.session.add(table)
         db.session.commit()
-        superaspects = Aspect.query.filter(Aspect.superaspect_id == None)
-        generate_aspects(table, superaspects)
+        Aspect.generate(table)
         # получаем данные
         table = Table.query.get(table.id)
         # делаем проверки
@@ -55,8 +53,8 @@ class ModelTestCase(unittest.TestCase):
         db.session.add(aspect_2)
         db.session.commit()
         superaspects = Aspect.query.filter(Aspect.superaspect_id == None)
-        generate_aspects(superaspects)
-        generate_universums(superaspects)
+        Aspect.generate(superaspects)
+        Universum.generate(superaspects)
         # получаем данные
         aspect = Aspect.query.filter_by(name='Неизменность Единство').first()
         universum = Universum.query.filter_by(name='Неизменность Единство Неизменность Неизменность').first()
@@ -79,18 +77,28 @@ class ModelTestCase(unittest.TestCase):
 
     def test_level(self):
         # готовим данные
-        aspect_1 = Aspect(name='Аспект 1-го уровня')
+        level_1 = Level(value=1)
+        aspect_1 = Aspect(name='Аспект 1-го уровня',
+                          level=level_1)
         db.session.add(aspect_1)
-        aspect_2 = Aspect(name='Аспект 2-го уровня', superaspect=aspect_1)
+        level_2 = Level(value=2)
+        aspect_2 = Aspect(name='Аспект 2-го уровня',
+                          superaspect=aspect_1,
+                          level=level_2)
         db.session.add(aspect_2)
-        aspect_3 = Aspect(name='Аспект 3-го уровня', superaspect=aspect_2)
-        db.session.add(aspect_3)
+        level_3 = Level(value=3)
+        aspect_3_1 = Aspect(name='Аспект 3-го уровня 1',
+                          superaspect=aspect_2,
+                          level=level_3)
+        db.session.add(aspect_3_1)
+        aspect_3_2 = Aspect(name='Аспект 3-го уровня 2',
+                            superaspect=aspect_2,
+                            level=level_3)
+        db.session.add(aspect_3_2)
         db.session.commit()
         # получаем данные
-        aspect_1 = Aspect.query.filter(Aspect.name == 'Аспект 1-го уровня').first()
-        aspect_2 = Aspect.query.filter(Aspect.name == 'Аспект 2-го уровня').first()
-        aspect_3 = Aspect.query.filter(Aspect.name == 'Аспект 3-го уровня').first()
+        aspect_1 = Aspect.query.get(aspect_1.id)
+        aspects = aspect_1.get_aspects(level_3)
         # делаем проверки
-        self.assertTrue(aspect_1.level == 1)
-        self.assertTrue(aspect_2.level == 2)
-        self.assertTrue(aspect_3.level == 3)
+        self.assertTrue(aspects[0] is aspect_3_1)
+        self.assertTrue(aspects[1] is aspect_3_2)

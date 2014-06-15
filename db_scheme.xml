@@ -129,24 +129,15 @@
         <row name="id" null="1" autoincrement="1">
             <datatype>INTEGER</datatype>
             <default>NULL</default></row>
-        <row name="label" null="1" autoincrement="0">
-            <datatype>VARCHAR(64)</datatype>
+        <row name="value" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
             <default>NULL</default></row>
-        <key type="PRIMARY" name="">
-            <part>id</part>
-        </key>
-    </table>
-    <table x="229" y="460" name="table_level">
         <row name="table_id" null="1" autoincrement="0">
             <datatype>INTEGER</datatype>
             <default>NULL</default><relation table="table" row="id" />
         </row>
-        <row name="level_id" null="1" autoincrement="0">
-            <datatype>INTEGER</datatype>
-            <default>NULL</default><relation table="level" row="id" />
-        </row>
         <key type="PRIMARY" name="">
-            <part>table_id</part>
+            <part>id</part>
         </key>
     </table>
 </sql>
