@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import unittest
 from app import create_app, db
-from app.web.models import Table, Aspect, Universum, Dimension, Level
+from app.web.models import Matrix, Aspect, Universum, Dimension, Level
 
 
 class ModelTestCase(unittest.TestCase):
@@ -16,23 +16,23 @@ class ModelTestCase(unittest.TestCase):
         db.session.remove()
         self.app_context.pop()
 
-    def test_table_generation(self):
+    def test_matrix_generation(self):
         # готовим данные
-        table = Table(name='Мир')
+        matrix = Matrix(name='Мир')
         aspect_1 = Aspect(name='Единство')
         aspect_2 = Aspect(name='Неизменность')
-        table.aspects.extend((aspect_1, aspect_2))
+        matrix.aspects.extend((aspect_1, aspect_2))
         dimension_1 = Dimension(name='Типы', aspect=aspect_1)
         dimension_2 = Dimension(name='Формы', aspect=aspect_2)
-        table.dimensions.extend((dimension_1, dimension_2))
-        db.session.add(table)
+        matrix.dimensions.extend((dimension_1, dimension_2))
+        db.session.add(matrix)
         db.session.commit()
         # получаем данные
-        table = Table.query.get(table.id)
-        table.generate(Level(value=1))
+        matrix = Matrix.query.get(matrix.id)
+        matrix.generate(Level(value=1))
         # делаем проверки
-        self.assertTrue(table.aspects.filter_by(name='Единство, Неизменность').first())
-        self.assertTrue(table.universums.filter_by(name='Единство, Неизменность; Единство, Единство').first())
+        self.assertTrue(matrix.aspects.filter_by(name='Единство, Неизменность').first())
+        self.assertTrue(matrix.universums.filter_by(name='Единство, Неизменность; Единство, Единство').first())
 
     def test_levels(self):
         # готовим данные

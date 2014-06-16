@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
 from app import create_app, db
-from app.web.models import Table, Aspect, Universum, Dimension
+from app.web.models import Matrix, Aspect, Universum, Dimension
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
@@ -13,7 +13,7 @@ migrate = Migrate(app, db)
 
 def make_shell_context():
     return dict(app=app, db=db,
-                Table=Table,
+                Matrix=Matrix,
                 Aspect=Aspect,
                 Universum=Universum,
                 Dimension=Dimension)

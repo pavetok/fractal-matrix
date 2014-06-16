@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %}
-{% block title %} Fractal Table {% endblock %}
+{% block title %} Fractal Matrix {% endblock %}
 
 <!--head-->
 {% block head %}
@@ -22,7 +22,7 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="{{ url_for('tables.get') }}">Список таблиц</a></li>
+				<li><a href="{{ url_for('matrices.get') }}">Список матриц</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
@@ -51,32 +51,35 @@
 	</div>
 	{% endfor %}
 
-	<!--table submenu-->
-	{% if table %}
+	<!--matrix submenu-->
+	{% if matrix %}
 	<div class="btn-group">
 		<div class="btn-group">
 			<a class="btn btn-default dropdown-toggle"
 			   data-toggle="dropdown"
-			   role="button">Таблица
+			   role="button">Матрица
 				<span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
+				{% for level in matrix.levels %}
 				<li><a class="btn btn-link"
-					   href="{{ url_for('tables.get', table_id=table.id) }}"
+					   href="{{ url_for('matrices.get', matrix_id=matrix.id, level_id=level.id) }}"
 					   role="button">1 уровень</a></li>
+				{% endfor %}
 				<li><a class="btn btn-link"
-					   href="{{ url_for('tables.get', table_id=table.id) }}"
-					   role="button">2 уровень</a></li>
+					   href="{{ url_for('matrices.generate', matrix_id=matrix.id,
+					   					level_value=matrix.levels|list|length + 1) }}"
+					   role="button">Сгенерировать уровень</a></li>
 			</ul>
 		</div>
 		<a class="btn btn-default"
-		   href="{{ url_for('dimensions.get', table_id=table.id) }}"
+		   href="{{ url_for('dimensions.get', matrix_id=matrix.id) }}"
 		   role="button">Измерения</a>
 		<a class="btn btn-default"
-		   href="{{ url_for('aspects.get', table_id=table.id) }}"
+		   href="{{ url_for('aspects.get', matrix_id=matrix.id) }}"
 		   role="button">Аспекты</a>
 		<a class="btn btn-default"
-		   href="{{ url_for('universums.get', table_id=table.id) }}"
+		   href="{{ url_for('universums.get', matrix_id=matrix.id) }}"
 		   role="button">Универсумы</a>
 	</div>
 	{% endif %}

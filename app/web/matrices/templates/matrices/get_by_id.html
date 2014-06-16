@@ -1,13 +1,13 @@
 {% extends "base/base.html" %}
 
-{% block title %} Информация о таблице {% endblock %}
+{% block title %} Информация о матрице {% endblock %}
 
 {% block page_content %}
-	<!--table name-->
+	<!--matrix name-->
 	<div class="page-header">
-		<h1>{{ table.name }}</h1>
+		<h1>{{ matrix.name }}</h1>
 	</div>
-	<!--table body-->
+	<!--matrix body-->
 	{% for aspect in y_aspects %}
 	<div class="row">
 		<div class="col-xs-2 with-padding">
@@ -38,7 +38,7 @@
 		</div>
 		{% endfor %}
 	</div>
-	<!--table levels-->
+	<!--matrix levels-->
 	<br>
 	<ul class="pager pull-left">
 		<li class="disabled"><a href="#">&larr; Предыдущий уровень</a></li>
