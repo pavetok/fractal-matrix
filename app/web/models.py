@@ -7,20 +7,25 @@ class Matrix(db.Model):
     __tablename__ = 'matrix'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    levels = db.relationship('Level', backref='matrix', lazy='dynamic')
-    aspects = db.relationship('Aspect', backref='matrix', lazy='dynamic')
-    universums = db.relationship('Universum', backref='matrix', lazy='dynamic')
-    dimensions = db.relationship('Dimension', backref='matrix', lazy='dynamic')
+    levels = db.relationship('Level', backref='matrix', lazy='dynamic',
+                             cascade='all, delete-orphan')
+    aspects = db.relationship('Aspect', backref='matrix', lazy='dynamic',
+                              cascade='all, delete-orphan')
+    universums = db.relationship('Universum', backref='matrix', lazy='dynamic',
+                                 cascade='all, delete-orphan')
+    dimensions = db.relationship('Dimension', backref='matrix', lazy='dynamic',
+                                 cascade='all, delete-orphan')
 
     def generate(self, level):
-        if level in self.levels.all():
+        if self.is_level(level):
             raise Exception('{} already exist'.format(level))
         else:
             level.matrix = self
-            db.session.add(level)
-            db.session.commit()
             Aspect.generate(self, level)
             Universum.generate(self, level)
+
+    def is_level(self, level):
+        return level.value in (level.value for level in self.levels)
 
     def __repr__(self):
         return '<Matrix: {}>'.format(self.name)
@@ -31,12 +36,14 @@ class Level(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Integer)
     matrix_id = db.Column(db.Integer, db.ForeignKey('matrix.id'))
-    aspects = db.relationship('Aspect', backref='level', lazy='dynamic')
-    universums = db.relationship('Universum', backref='level', lazy='dynamic')
+    aspects = db.relationship('Aspect', backref='level', lazy='dynamic',
+                              cascade='all, delete-orphan')
+    universums = db.relationship('Universum', backref='level', lazy='dynamic',
+                                 cascade='all, delete-orphan')
 
     @property
     def prev(self):
-        return self.matrix.levels.filter_by(value=self.value-1).first()
+        return self.matrix.levels.filter_by(value=self.value - 1).first()
 
     def __repr__(self):
         return '<Level: {}>'.format(self.value)
@@ -71,8 +78,8 @@ class Aspect(db.Model):
     @staticmethod
     def generate(matrix, level):
         superaspects = Aspect.query.filter_by(superaspect_id=None)
-        if not superaspects:
-            raise Exception('At least two aspects must be created')
+        if len(superaspects.all()) < 2:
+            raise Exception('At least two superaspects must be created')
         if level.prev:
             aspects_with_level = matrix.aspects.filter_by(level_id=level.prev.id).all()
         else:
@@ -120,6 +127,8 @@ class Universum(db.Model):
 
     @staticmethod
     def generate(matrix, level):
+        if len(matrix.dimensions.all()) < 2:
+            raise Exception('At least two dimensions must be created')
         dimensions_aspects = (dimension.get_aspects(level) for dimension in matrix.dimensions)
         for aspects in product(*dimensions_aspects):
             universum = Universum()

@@ -28,8 +28,7 @@ def create(matrix_id):
         db.session.add(aspect)
         db.session.commit()
         flash('Аспект был создан')
-        return redirect(url_for('.get', matrix_id=matrix_id,
-                                aspect_id=aspect.id))
+        return redirect(url_for('.get', matrix_id=matrix_id))
     return render_template('aspects/create.html', form=form)
 
 

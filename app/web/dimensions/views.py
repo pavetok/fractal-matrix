@@ -31,8 +31,7 @@ def create(matrix_id):
         db.session.add(dimension)
         db.session.commit()
         flash('Измерение было создано')
-        return redirect(url_for('.get', matrix_id=matrix_id,
-                                dimension_id=dimension.id))
+        return redirect(url_for('.get', matrix_id=matrix_id))
     return render_template('dimensions/create.html', form=form)
 
 

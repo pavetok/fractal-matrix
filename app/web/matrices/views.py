@@ -2,16 +2,8 @@
 from flask import render_template, url_for, flash, redirect
 from . import matrices
 from ... import db
-from ..models import Matrix, Level, Aspect
+from ..models import Matrix, Aspect
 from .forms import MatrixForm
-
-
-@matrices.route('/matrices/<int:matrix_id>/levels/<int:level_value>')
-def generate(matrix_id, level_value):
-    matrix = Matrix.query.get_or_404(matrix_id)
-    new_level = Level(value=level_value)
-    matrix.generate(new_level)
-    return redirect(url_for('.get', matrix_id=matrix.id, level_id=new_level.id))
 
 
 @matrices.route('/matrices')

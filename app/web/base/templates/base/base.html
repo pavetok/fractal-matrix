@@ -62,14 +62,14 @@
 			</a>
 			<ul class="dropdown-menu">
 				{% for level in matrix.levels %}
-				<li><a class="btn btn-link"
+				<li><a class="btn btn-link pull-left"
 					   href="{{ url_for('matrices.get', matrix_id=matrix.id, level_id=level.id) }}"
-					   role="button">1 уровень</a></li>
+					   role="button">{{ level.value }} уровень</a></li>
 				{% endfor %}
-				<li><a class="btn btn-link"
-					   href="{{ url_for('matrices.generate', matrix_id=matrix.id,
+				<li><a class="btn btn-link pull-left"
+					   href="{{ url_for('levels.generate', matrix_id=matrix.id,
 					   					level_value=matrix.levels|list|length + 1) }}"
-					   role="button">Сгенерировать уровень</a></li>
+					   role="button">Новый уровень</a></li>
 			</ul>
 		</div>
 		<a class="btn btn-default"
