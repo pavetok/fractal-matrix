@@ -38,10 +38,28 @@
 		</div>
 		{% endfor %}
 	</div>
-	<!--matrix levels-->
+	<!--matrix levels pager-->
 	<br>
 	<ul class="pager pull-left">
-		<li class="disabled"><a href="#">&larr; Предыдущий уровень</a></li>
-		<li><a href="#">Следующий уровень &rarr;</a></li>
+		{% if level.prev %}
+		<li><a href="{{ url_for('matrices.get', matrix_id=matrix.id,
+								level_id=level.prev.id) }}">
+			&larr; Предыдущий уровень</a></li>
+		{% else %}
+		<li class="disabled">
+			<a href="#">&larr; Предыдущий уровень</a>
+		</li>
+		{% endif %}
+		{% if level.next %}
+		<li><a href="{{ url_for('matrices.get', matrix_id=matrix.id,
+								level_id=level.next.id) }}">
+			Следующий уровень &rarr;</a>
+		</li>
+		{% else %}
+		<li><a href="{{ url_for('levels.generate', matrix_id=matrix.id,
+								level_value=matrix.levels|list|length + 1) }}">
+			Следующий уровень &rarr;</a>
+		</li>
+		{% endif %}
 	</ul>
 {% endblock %}

@@ -2,19 +2,21 @@
 from flask import render_template, url_for, flash, redirect
 from . import matrices
 from ... import db
-from ..models import Matrix, Aspect
+from ..models import Matrix, Level, Aspect
 from .forms import MatrixForm
 
 
 @matrices.route('/matrices')
+@matrices.route('/matrices/')
 @matrices.route('/matrices/<int:matrix_id>')
 @matrices.route('/matrices/<int:matrix_id>/levels/<int:level_id>')
-def get(matrix_id=None, level_id=None):
+def get(matrix_id=None, level_id=1):
     if matrix_id is None:
         matrices = Matrix.query.all()
         return render_template('matrices/get.html', matrices=matrices)
     else:
         matrix = Matrix.query.get_or_404(matrix_id)
+        level = Level.query.get_or_404(level_id)
         universums = matrix.universums.all()
         first_row_of_universums = (universum for universum in universums if \
                                    universums.index(universum) % 2 == 0)
@@ -25,12 +27,15 @@ def get(matrix_id=None, level_id=None):
             (x_aspects, y_aspects) = (superaspect.subaspects for superaspect in superaspects)
             return render_template('matrices/get_by_id.html',
                                    matrix=matrix,
+                                   level=level,
                                    x_aspects=reversed(x_aspects),
                                    y_aspects=y_aspects,
                                    first_row_of_universums=reversed(list(first_row_of_universums)),
                                    second_row_of_universums=reversed(list(second_row_of_universums)))
         else:
-            return render_template('matrices/get_by_id.html', matrix=matrix)
+            return render_template('matrices/get_by_id.html',
+                                   matrix=matrix,
+                                   level=level)
 
 @matrices.route('/matrices/create', methods=['GET', 'POST'])
 def create():

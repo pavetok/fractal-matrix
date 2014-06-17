@@ -63,7 +63,8 @@
 			<ul class="dropdown-menu">
 				{% for level in matrix.levels %}
 				<li><a class="btn btn-link pull-left"
-					   href="{{ url_for('matrices.get', matrix_id=matrix.id, level_id=level.id) }}"
+					   href="{{ url_for('matrices.get', matrix_id=matrix.id,
+					   					level_id=level.id) }}"
 					   role="button">{{ level.value }} уровень</a></li>
 				{% endfor %}
 				<li><a class="btn btn-link pull-left"

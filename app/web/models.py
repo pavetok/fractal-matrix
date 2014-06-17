@@ -45,6 +45,10 @@ class Level(db.Model):
     def prev(self):
         return self.matrix.levels.filter_by(value=self.value - 1).first()
 
+    @property
+    def next(self):
+        return self.matrix.levels.filter_by(value=self.value + 1).first()
+
     def __repr__(self):
         return '<Level: {}>'.format(self.value)
 
