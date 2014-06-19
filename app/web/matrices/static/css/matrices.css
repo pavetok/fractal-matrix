@@ -1,0 +1,13 @@
+.matrix {
+    display: table;
+}
+.matrix-row {
+    display: table-row;
+}
+.matrix-heading {
+    display: table-cell;
+}
+.matrix-cell {
+    display: table-cell;
+    border: 1px solid #ddd;
+}

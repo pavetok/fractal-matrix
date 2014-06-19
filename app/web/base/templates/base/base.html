@@ -4,7 +4,8 @@
 <!--head-->
 {% block head %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('base.static', filename='styles.css') }}">
+	<link rel="stylesheet" href="{{ url_for('base.static', filename='base.css') }}">
+	<link rel="stylesheet" href="{{ url_for('matrices.static', filename='matrices.css') }}">
 {% endblock %}
 
 <!--navbar-->

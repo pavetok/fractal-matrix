@@ -16,6 +16,23 @@ class Matrix(db.Model):
     dimensions = db.relationship('Dimension', backref='matrix', lazy='dynamic',
                                  cascade='all, delete-orphan')
 
+    def get_rows(self, level):
+        rows = []
+        horizontal_dimension = self.dimensions.filter_by(type='x').first()
+        vertical_dimension = self.dimensions.filter_by(type='y').first()
+        # добавляем заголовки строк и содержимое строк
+        for row_head_aspect in vertical_dimension.get_aspects(level):
+            row = []
+            row.append(row_head_aspect)
+            row.extend(row_head_aspect.universums)
+            rows.append(row)
+        # добавляем заголовки колонок матрицы
+        column_head_aspects = []
+        column_head_aspects.append('')  # пустая ячейка
+        column_head_aspects.extend(horizontal_dimension.get_aspects(level))
+        rows.append(column_head_aspects)
+        return rows
+
     def generate(self, level):
         if self.is_level(level):
             raise Exception('{} already exist'.format(level))
@@ -161,6 +178,7 @@ class Dimension(db.Model):
     __tablename__ = 'dimension'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    type = db.Column(db.String(1), unique=True)
     matrix_id = db.Column(db.Integer, db.ForeignKey('matrix.id'))
     aspect_id = db.Column(db.Integer, db.ForeignKey('aspect.id'))
     aspect = db.relationship('Aspect', uselist=False, backref='dimension')

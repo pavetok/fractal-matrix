@@ -7,14 +7,15 @@ from .forms import UniversumForm
 
 
 @universums.route('/matrices/<int:matrix_id>/universums')
+@universums.route('/matrices/<int:matrix_id>/universums/')
 @universums.route('/matrices/<int:matrix_id>/universums/<int:universum_id>')
 def get(matrix_id, universum_id=None):
     matrix = Matrix.query.get_or_404(matrix_id)
     if universum_id is None:
-        return render_template('universums/get.html', matrix=matrix)
+        return render_template('universums/get_all.html', matrix=matrix)
     else:
         universum = Universum.query.get_or_404(universum_id)
-        return render_template('universums/get_by_id.html', matrix=matrix,
+        return render_template('universums/get_one.html', matrix=matrix,
                                universum=universum)
 
 @universums.route('/matrices/<int:matrix_id>/universums/create',

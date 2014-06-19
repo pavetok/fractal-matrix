@@ -7,14 +7,15 @@ from .forms import AspectForm
 
 
 @aspects.route('/matrices/<int:matrix_id>/aspects')
+@aspects.route('/matrices/<int:matrix_id>/aspects/')
 @aspects.route('/matrices/<int:matrix_id>/aspects/<int:aspect_id>')
 def get(matrix_id, aspect_id=None):
     matrix = Matrix.query.get_or_404(matrix_id)
     if aspect_id is None:
-        return render_template('aspects/get.html', matrix=matrix)
+        return render_template('aspects/get_all.html', matrix=matrix)
     else:
         aspect = Aspect.query.get_or_404(aspect_id)
-        return render_template('aspects/get_by_id.html', matrix=matrix,
+        return render_template('aspects/get_one.html', matrix=matrix,
                                aspect=aspect)
 
 

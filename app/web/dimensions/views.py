@@ -7,14 +7,15 @@ from .forms import DimensionForm
 
 
 @dimensions.route('/matrices/<int:matrix_id>/dimensions')
+@dimensions.route('/matrices/<int:matrix_id>/dimensions/')
 @dimensions.route('/matrices/<int:matrix_id>/dimensions/<int:dimension_id>')
 def get(matrix_id, dimension_id=None):
     matrix = Matrix.query.get_or_404(matrix_id)
     if dimension_id is None:
-        return render_template('dimensions/get.html', matrix=matrix)
+        return render_template('dimensions/get_all.html', matrix=matrix)
     else:
         dimension = Dimension.query.get_or_404(dimension_id)
-        return render_template('dimensions/get_by_id.html', matrix=matrix,
+        return render_template('dimensions/get_one.html', matrix=matrix,
                                dimension=dimension)
 
 
@@ -28,6 +29,7 @@ def create(matrix_id):
         dimension = Dimension(name=form.name.data)
         dimension.matrix = Matrix.query.get_or_404(matrix_id)
         dimension.aspect = Aspect.query.get(form.aspect.data)
+        dimension.type = form.type.data
         db.session.add(dimension)
         db.session.commit()
         flash('Измерение было создано')
@@ -46,6 +48,7 @@ def update(matrix_id, dimension_id):
     if form.validate_on_submit():
         dimension.name = form.name.data
         dimension.aspect = Aspect.query.get(form.aspect.data)
+        dimension.type = form.type.data
         db.session.commit()
         flash('Измерение было изменено')
         return redirect(url_for('.get', matrix_id=matrix_id,
