@@ -21,7 +21,7 @@ class ModelTestCase(unittest.TestCase):
         # делаем проверки
         self.assertTrue(matrix.aspects.filter_by(name='Единство, Неизменность').first())
         self.assertTrue(matrix.universums.filter_by(
-            name='Единство, Единство; Единство, Неизменность; Единство, Изменчивость').first())
+            name='Единство, Изменчивость; Единство, Неизменность; Единство, Единство').first())
 
     def test_levels(self):
         # готовим данные
@@ -55,15 +55,19 @@ def matrix_create(max_level):
     matrix.universums.append(universum)
     aspect_1 = Aspect(name='Единство', level=level)
     aspect_1.universums.append(universum)
+    matrix.aspects.append(aspect_1)
     aspect_2 = Aspect(name='Неизменность', level=level)
     aspect_2.universums.append(universum)
+    matrix.aspects.append(aspect_2)
     aspect_3 = Aspect(name='Изменчивость', level=level)
     aspect_3.universums.append(universum)
-    matrix.aspects.extend((aspect_1, aspect_2, aspect_3))
+    matrix.aspects.append(aspect_3)
     dimension_1 = Dimension(name='Типы', type='x', aspect=aspect_1)
+    matrix.dimensions.append(dimension_1)
     dimension_2 = Dimension(name='Формы', type='y', aspect=aspect_2)
+    matrix.dimensions.append(dimension_2)
     dimension_3 = Dimension(name='Объекты', type='z', aspect=aspect_3)
-    matrix.dimensions.extend((dimension_1, dimension_2, dimension_3))
+    matrix.dimensions.append(dimension_3)
     db.session.add(matrix)
     db.session.commit()
     for level_value in range(2, max_level + 1):

@@ -75,14 +75,14 @@
 			</ul>
 		</div>
 		<a class="btn btn-default"
-		   href="{{ url_for('dimensions.get', matrix_id=matrix.id) }}"
-		   role="button">Измерения</a>
+		   href="{{ url_for('universums.get', matrix_id=matrix.id) }}"
+		   role="button">Универсумы</a>
 		<a class="btn btn-default"
 		   href="{{ url_for('aspects.get', matrix_id=matrix.id) }}"
 		   role="button">Аспекты</a>
 		<a class="btn btn-default"
-		   href="{{ url_for('universums.get', matrix_id=matrix.id) }}"
-		   role="button">Универсумы</a>
+		   href="{{ url_for('dimensions.get', matrix_id=matrix.id) }}"
+		   role="button">Измерения</a>
 	</div>
 	{% endif %}
 

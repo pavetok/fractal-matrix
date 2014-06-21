@@ -21,15 +21,15 @@ class Matrix(db.Model):
         horizontal_dimension = self.dimensions.filter_by(type='x').first()
         vertical_dimension = self.dimensions.filter_by(type='y').first()
         # добавляем заголовки строк и содержимое строк
-        for row_head_aspect in reversed(vertical_dimension.get_aspects(level)):
+        for row_head_aspect in vertical_dimension.get_aspects(level):
             row = []
             row.append(row_head_aspect)
-            row.extend(row_head_aspect.universums)
+            row.extend(reversed(list(row_head_aspect.universums)))
             rows.append(row)
         # добавляем заголовки колонок матрицы
         column_head_aspects = []
         column_head_aspects.append('')  # пустая ячейка
-        column_head_aspects.extend(reversed(horizontal_dimension.get_aspects(level)))
+        column_head_aspects.extend(horizontal_dimension.get_aspects(level))
         rows.append(column_head_aspects)
         return rows
 
@@ -94,10 +94,10 @@ class Aspect(db.Model):
             if aspect.level is level:
                 aspects_with_level.append(aspect)
         if aspects_with_level:
-            return aspects_with_level
+            return reversed(aspects_with_level)
         for aspect in self.subaspects:
             aspects_with_level.extend(aspect.get_aspects(level))
-        return aspects_with_level
+        return reversed(aspects_with_level)
 
     @staticmethod
     def generate(matrix, level):
@@ -162,7 +162,7 @@ class Universum(db.Model):
                           for aspect in superuniversum.aspects.order_by('id'))
             for aspects in product(*subaspects):
                 universum = Universum()
-                universum.name = '; '.join(aspect.name for aspect in aspects)
+                universum.name = '; '.join(aspect.name for aspect in reversed(aspects))
                 universum.matrix = matrix
                 universum.level = level
                 universum.superuniversum = superuniversum
