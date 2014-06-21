@@ -94,10 +94,10 @@ class Aspect(db.Model):
             if aspect.level is level:
                 aspects_with_level.append(aspect)
         if aspects_with_level:
-            return reversed(aspects_with_level)
+            return list(reversed(aspects_with_level))
         for aspect in self.subaspects:
             aspects_with_level.extend(aspect.get_aspects(level))
-        return reversed(aspects_with_level)
+        return list(reversed(aspects_with_level))
 
     @staticmethod
     def generate(matrix, level):

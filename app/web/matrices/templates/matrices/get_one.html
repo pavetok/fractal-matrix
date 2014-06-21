@@ -7,8 +7,8 @@
 	{% if level %}
 	<style type="text/css">
 	.matrix {
-		width: {{ level.value ** 3 * 4 }}%;
-		min-width: 40%;}</style>
+		width: {{ matrix.get_rows(level)|length * 12 }}%;
+		# min-width: 20%;}</style>
 	{% endif %}
 {% endblock %}
 
