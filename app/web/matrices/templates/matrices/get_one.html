@@ -4,17 +4,24 @@
 
 {% block head %}
 	{{ super() }}
+	{% if level %}
 	<style type="text/css">
 	.matrix {
-		width: {{ level.value ** 3 * 8 }}%;
-		min-width: 70%;}</style>
+		width: {{ level.value ** 3 * 4 }}%;
+		min-width: 40%;}</style>
+	{% endif %}
 {% endblock %}
 
 {% block page_content %}
 	<!--matrix name-->
 	<div class="page-header">
-		<h1>{{ matrix.name }} <small>{{ level.value }} уровень</small></h1>
+		<h1>{{ matrix.name }}
+			{% if level %}
+			<small>{{ level.value }} уровень</small>
+			{% endif %}
+		</h1>
 	</div>
+	{% if level %}
 	<!--matrix body-->
 	<div class="matrix">
 		{% for row in matrix.get_rows(level) %}
@@ -60,4 +67,5 @@
 		</li>
 		{% endif %}
 	</ul>
+	{% endif %}
 {% endblock %}

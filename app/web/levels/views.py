@@ -8,7 +8,7 @@ from ..models import Matrix, Level
 @levels.route('/matrices/<int:matrix_id>/levels/<int:level_value>/generate')
 def generate(matrix_id, level_value):
     matrix = Matrix.query.get_or_404(matrix_id)
-    new_level = Level(value=level_value)
+    new_level = Level(value=level_value, matrix=matrix)
     matrix.generate(new_level)
     return redirect(url_for('matrices.get', matrix_id=matrix.id, level_id=new_level.id))
 

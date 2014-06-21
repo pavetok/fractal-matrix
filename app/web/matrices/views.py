@@ -10,12 +10,12 @@ from .forms import MatrixForm
 @matrices.route('/matrices/')
 @matrices.route('/matrices/<int:matrix_id>')
 @matrices.route('/matrices/<int:matrix_id>/levels/<int:level_id>')
-def get(matrix_id=None, level_id=1):
+def get(matrix_id=None, level_id=0):
     if matrix_id is None:
         matrices = Matrix.query.all()
         return render_template('matrices/get_all.html', matrices=matrices)
     matrix = Matrix.query.get_or_404(matrix_id)
-    level = Level.query.get_or_404(level_id)
+    level = Level.query.get(level_id)
     return render_template('matrices/get_one.html', matrix=matrix, level=level)
 
 
@@ -24,10 +24,10 @@ def create():
     form = MatrixForm()
     if form.validate_on_submit():
         matrix = Matrix(name=form.name.data)
+        level = Level(value=1, matrix=matrix)
+        matrix.levels.append(level)
         db.session.add(matrix)
-        db.session.commit()
         flash('Матрица была создана')
-        matrix = Matrix.query.get_or_404(matrix.id)
         return redirect(url_for('.get', matrix_id=matrix.id))
     return render_template('matrices/create.html', form=form)
 
@@ -37,7 +37,6 @@ def update(matrix_id):
     form = MatrixForm()
     if form.validate_on_submit():
         matrix.name = form.name.data
-        db.session.commit()
         flash('Матрица была изменена')
         return redirect(url_for('.get', matrix_id=matrix.id))
     form.name.data = matrix.name

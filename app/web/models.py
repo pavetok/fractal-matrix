@@ -21,7 +21,7 @@ class Matrix(db.Model):
         horizontal_dimension = self.dimensions.filter_by(type='x').first()
         vertical_dimension = self.dimensions.filter_by(type='y').first()
         # добавляем заголовки строк и содержимое строк
-        for row_head_aspect in vertical_dimension.get_aspects(level):
+        for row_head_aspect in reversed(vertical_dimension.get_aspects(level)):
             row = []
             row.append(row_head_aspect)
             row.extend(row_head_aspect.universums)
@@ -29,7 +29,7 @@ class Matrix(db.Model):
         # добавляем заголовки колонок матрицы
         column_head_aspects = []
         column_head_aspects.append('')  # пустая ячейка
-        column_head_aspects.extend(horizontal_dimension.get_aspects(level))
+        column_head_aspects.extend(reversed(horizontal_dimension.get_aspects(level)))
         rows.append(column_head_aspects)
         return rows
 
@@ -37,7 +37,6 @@ class Matrix(db.Model):
         if self.is_level(level):
             raise Exception('{} already exist'.format(level))
         else:
-            level.matrix = self
             Aspect.generate(self, level)
             Universum.generate(self, level)
 
@@ -57,6 +56,10 @@ class Level(db.Model):
                               cascade='all, delete-orphan')
     universums = db.relationship('Universum', backref='level', lazy='dynamic',
                                  cascade='all, delete-orphan')
+
+    def __init__(self, value, matrix):
+        self.value = value
+        self.matrix = matrix
 
     @property
     def prev(self):
@@ -99,7 +102,7 @@ class Aspect(db.Model):
     @staticmethod
     def generate(matrix, level):
         superaspects = Aspect.query.filter_by(superaspect_id=None)
-        if len(superaspects.all()) < 2:
+        if len(list(superaspects)) < 2:
             raise Exception('At least two superaspects must be created')
         if level.prev:
             aspects_with_level = matrix.aspects.filter_by(level_id=level.prev.id).all()
@@ -143,21 +146,28 @@ class Universum(db.Model):
     subuniversums = db.relationship('Universum',
                                     cascade='all, delete-orphan',
                                     backref=db.backref('superuniversum', remote_side=id))
-    aspects = db.relationship('Aspect', secondary=universum_aspect,
+    aspects = db.relationship('Aspect',
+                              lazy='dynamic',
+                              secondary=universum_aspect,
                               backref=db.backref('universums', lazy='dynamic'))
 
     @staticmethod
     def generate(matrix, level):
-        if len(matrix.dimensions.all()) < 2:
-            raise Exception('At least two dimensions must be created')
-        dimensions_aspects = (dimension.get_aspects(level) for dimension in matrix.dimensions)
-        for aspects in product(*dimensions_aspects):
-            universum = Universum()
-            universum.name = '; '.join(reversed([aspect.name for aspect in aspects]))
-            universum.matrix = matrix
-            universum.level = level
-            universum.aspects.extend(reversed(aspects))
-            db.session.add(universum)
+        if level.prev:
+            superuniversums = matrix.universums.filter_by(level_id=level.prev.id)
+        else:
+            raise Exception('Should be at least one superuniversum')
+        for superuniversum in superuniversums:
+            subaspects = (aspect.subaspects \
+                          for aspect in superuniversum.aspects.order_by('id'))
+            for aspects in product(*subaspects):
+                universum = Universum()
+                universum.name = '; '.join(aspect.name for aspect in aspects)
+                universum.matrix = matrix
+                universum.level = level
+                universum.superuniversum = superuniversum
+                universum.aspects.extend(aspects)
+                db.session.add(universum)
         db.session.commit()
 
     @staticmethod
@@ -184,7 +194,7 @@ class Dimension(db.Model):
     aspect = db.relationship('Aspect', uselist=False, backref='dimension')
 
     def get_aspects(self, level):
-        return self.aspect.get_aspects(level)
+        return self.aspect.get_aspects(level) or [self.aspect]
 
     def __repr__(self):
         return '<Dimension: {}>'.format(self.name)

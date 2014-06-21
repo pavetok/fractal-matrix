@@ -2,8 +2,8 @@
 from flask import render_template, url_for, flash, redirect
 from . import universums
 from ... import db
-from ..models import Matrix, Aspect, Universum
-from .forms import UniversumForm
+from ..models import Matrix, Level, Aspect, Universum
+from .forms import UniversumSimpleForm, UniversumFullForm
 
 
 @universums.route('/matrices/<int:matrix_id>/universums')
@@ -21,12 +21,18 @@ def get(matrix_id, universum_id=None):
 @universums.route('/matrices/<int:matrix_id>/universums/create',
                   methods=['GET', 'POST'])
 def create(matrix_id):
-    form = UniversumForm()
+    form = UniversumFullForm()
+    matrix = Matrix.query.get_or_404(matrix_id)
+    form.level.choices = [(level.id, level.value) for level in matrix.levels]
+    form.aspects.choices = [(aspect.id, aspect.name) \
+                            for aspect in matrix.aspects]
     if form.validate_on_submit():
         universum = Universum(name=form.name.data)
-        universum.matrix = Matrix.query.get_or_404(matrix_id)
+        universum.matrix = matrix
+        universum.level = Level.query.get(form.level.data)
+        universum.aspects.extend(Aspect.query.get(aspect_id) \
+                                 for aspect_id in form.aspects.data)
         db.session.add(universum)
-        db.session.commit()
         flash('Универсум был создан')
         return redirect(url_for('.get', matrix_id=matrix_id,
                                 universum_id=universum.id))
@@ -35,14 +41,12 @@ def create(matrix_id):
 @universums.route('/matrices/<int:matrix_id>/universums/<int:universum_id>/update',
                   methods=['GET', 'POST'])
 def update(matrix_id, universum_id):
-    form = UniversumForm()
+    form = UniversumSimpleForm()
     universum = Universum.query.get_or_404(universum_id)
     if form.validate_on_submit():
         universum.name = form.name.data
-        db.session.commit()
         flash('Универсум был изменен')
-        return redirect(url_for('.get', matrix_id=matrix_id,
-                                universum_id=universum_id))
+        return redirect(url_for('.get', matrix_id=matrix_id))
     form.name.data = universum.name
     return render_template('universums/update.html', form=form)
 
