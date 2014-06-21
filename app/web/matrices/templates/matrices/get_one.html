@@ -7,8 +7,8 @@
 	{% if level %}
 	<style type="text/css">
 	.matrix {
-		width: {{ matrix.get_rows(level)|length * 12 }}%;
-		# min-width: 20%;}</style>
+		width: {{ matrix.get_rows(level)|length * 14 }}%;
+	}</style>
 	{% endif %}
 {% endblock %}
 
@@ -31,10 +31,20 @@
 					{% if 'Aspect' in cell.__repr__() %}
 					<div class="matrix-heading with-padding">
 						{{ cell.name }}
+						<a class="btn btn-default btn-xs"
+						   href="{{ url_for('aspects.update', matrix_id=matrix.id,
+											aspect_id=cell.id) }}">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</a>
 					</div>
 					{% else %}
 					<div class="matrix-cell with-padding with-background">
 						{{ cell.name }}
+						<a class="btn btn-default btn-xs"
+						   href="{{ url_for('universums.update', matrix_id=matrix.id,
+				   							universum_id=cell.id) }}">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</a>
 					</div>
 					{% endif %}
 				{% else %}

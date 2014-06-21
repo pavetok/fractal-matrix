@@ -29,7 +29,7 @@ class Matrix(db.Model):
         # добавляем заголовки колонок матрицы
         column_head_aspects = []
         column_head_aspects.append('')  # пустая ячейка
-        column_head_aspects.extend(horizontal_dimension.get_aspects(level))
+        column_head_aspects.extend(reversed(horizontal_dimension.get_aspects(level)))
         rows.append(column_head_aspects)
         return rows
 
@@ -94,10 +94,12 @@ class Aspect(db.Model):
             if aspect.level is level:
                 aspects_with_level.append(aspect)
         if aspects_with_level:
-            return list(reversed(aspects_with_level))
+            return aspects_with_level
+            # return list(reversed(aspects_with_level))
         for aspect in self.subaspects:
             aspects_with_level.extend(aspect.get_aspects(level))
-        return list(reversed(aspects_with_level))
+        return aspects_with_level
+        # return list(reversed(aspects_with_level))
 
     @staticmethod
     def generate(matrix, level):
