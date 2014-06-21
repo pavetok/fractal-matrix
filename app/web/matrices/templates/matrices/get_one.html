@@ -29,18 +29,18 @@
 			{% for cell in row %}
 				{% if cell %}
 					{% if 'Aspect' in cell.__repr__() %}
-					<div class="matrix-heading with-padding">
+					<div class="matrix-aspect with-padding">
 						{{ cell.name }}
-						<a class="btn btn-default btn-xs"
+						<a class="btn btn-default btn-xs appearing"
 						   href="{{ url_for('aspects.update', matrix_id=matrix.id,
 											aspect_id=cell.id) }}">
 							<span class="glyphicon glyphicon-pencil"></span>
 						</a>
 					</div>
 					{% else %}
-					<div class="matrix-cell with-padding with-background">
+					<div class="matrix-universum with-padding with-background">
 						{{ cell.name }}
-						<a class="btn btn-default btn-xs"
+						<a class="btn btn-default btn-xs appearing"
 						   href="{{ url_for('universums.update', matrix_id=matrix.id,
 				   							universum_id=cell.id) }}">
 							<span class="glyphicon glyphicon-pencil"></span>
@@ -48,7 +48,7 @@
 					</div>
 					{% endif %}
 				{% else %}
-				<div class="matrix-heading with-padding"></div>
+				<div class="matrix-aspect with-padding"></div>
 				{% endif%}
 			{% endfor %}
 		</div>
