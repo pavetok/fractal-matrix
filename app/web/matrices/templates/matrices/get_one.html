@@ -7,7 +7,7 @@
 	{% if level %}
 	<style type="text/css">
 	.matrix {
-		width: {{ matrix.get_rows(level)|length * 14 }}%;
+		width: {{ matrix.get_slice(level)|length * 14 }}%;
 	}</style>
 	{% endif %}
 {% endblock %}
@@ -24,7 +24,7 @@
 	{% if level %}
 	<!--matrix body-->
 	<div class="matrix">
-		{% for row in matrix.get_rows(level) %}
+		{% for row in matrix.get_slice(level) %}
 		<div class="matrix-row">
 			{% for cell in row %}
 				{% if cell %}

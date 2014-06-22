@@ -23,7 +23,7 @@ def get(matrix_id, dimension_id=None):
                   methods=['GET', 'POST'])
 def create(matrix_id):
     form = DimensionForm()
-    superaspects = Aspect.query.filter_by(superaspect=None).order_by('name')
+    superaspects = Aspect.query.filter_by(superaspect=None)
     form.aspect.choices = [(aspect.id, aspect.name) for aspect in superaspects]
     if form.validate_on_submit():
         dimension = Dimension(name=form.name.data)
@@ -42,7 +42,7 @@ def create(matrix_id):
 def update(matrix_id, dimension_id):
     form = DimensionForm()
     dimension = Dimension.query.get_or_404(dimension_id)
-    superaspects = Aspect.query.filter_by(superaspect=None).order_by('name')
+    superaspects = Aspect.query.filter_by(superaspect=None)
     form.aspect.choices = [(aspect.id, aspect.name) for aspect in superaspects]
     form.aspect.data = dimension.aspect.id
     if form.validate_on_submit():
