@@ -9,17 +9,17 @@
 			<h1>Универсумы</h1>
 		</div>
 	</div>
-	{% for universum in table.universums %}
+	{% for universum in matrix.universums %}
 		<ul>
 			<li>
 				{{ universum.name }}
 				<a class="btn btn-default btn-xs"
-				   href="{{ url_for('universums.update', table_id=table.id,
+				   href="{{ url_for('universums.update', matrix_id=matrix.id,
 				   					universum_id=universum.id) }}">
 					<span class="glyphicon glyphicon-pencil"></span>
 				</a>
 				<a class="btn btn-default btn-xs"
-				   href="{{ url_for('universums.delete', table_id=table.id,
+				   href="{{ url_for('universums.delete', matrix_id=matrix.id,
 				   					universum_id=universum.id) }}">
 					<span class="glyphicon glyphicon-trash"></span>
 				</a>
@@ -28,7 +28,7 @@
 	{% endfor %}
 	<br>
 	<a class="btn btn-default"
-	   href="{{ url_for('universums.create', table_id=table.id) }}">
+	   href="{{ url_for('universums.create', matrix_id=matrix.id) }}">
 		<span class="glyphicon glyphicon-plus"></span>
 		Создать универсум
 	</a>

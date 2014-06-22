@@ -44,32 +44,40 @@
     <row name="name" null="1" autoincrement="0">
         <datatype>VARCHAR(64)</datatype>
         <default>NULL</default></row>
+    <row name="matrix_id" null="1" autoincrement="0">
+        <datatype>INTEGER</datatype>
+        <default>NULL</default><relation table="matrix" row="id" />
+    </row>
     <row name="superaspect_id" null="1" autoincrement="0">
         <datatype>INTEGER</datatype>
         <default>NULL</default><relation table="aspect" row="id" />
     </row>
-    <row name="table_id" null="1" autoincrement="0">
+    <row name="level_id" null="1" autoincrement="0">
         <datatype>INTEGER</datatype>
-        <default>NULL</default><relation table="table" row="id" />
+        <default>NULL</default><relation table="level" row="id" />
     </row>
     <key type="PRIMARY" name="">
         <part>id</part>
     </key>
 </table>
-    <table x="668" y="240" name="universum">
+    <table x="661" y="210" name="universum">
         <row name="id" null="1" autoincrement="1">
             <datatype>INTEGER</datatype>
             <default>NULL</default></row>
         <row name="name" null="1" autoincrement="0">
             <datatype>VARCHAR(64)</datatype>
             <default>NULL</default></row>
+        <row name="matrix_id" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default><relation table="matrix" row="id" />
+        </row>
         <row name="superuniversum_id" null="1" autoincrement="0">
             <datatype>INTEGER</datatype>
             <default>NULL</default><relation table="universum" row="id" />
         </row>
-        <row name="table_id" null="1" autoincrement="0">
+        <row name="level_id" null="1" autoincrement="0">
             <datatype>INTEGER</datatype>
-            <default>NULL</default><relation table="table" row="id" />
+            <default>NULL</default><relation table="level" row="id" />
         </row>
         <key type="PRIMARY" name="">
             <part>id</part>
@@ -87,7 +95,7 @@
         <key type="PRIMARY" name="">
         </key>
     </table>
-    <table x="426" y="382" name="table">
+    <table x="426" y="382" name="matrix">
         <row name="id" null="1" autoincrement="1">
             <datatype>INTEGER</datatype>
             <default>NULL</default></row>
@@ -105,13 +113,28 @@
         <row name="name" null="1" autoincrement="0">
             <datatype>VARCHAR(64)</datatype>
             <default>NULL</default></row>
+        <row name="matrix_id" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default><relation table="matrix" row="id" />
+        </row>
         <row name="aspect_id" null="1" autoincrement="0">
             <datatype>INTEGER</datatype>
             <default>NULL</default><relation table="aspect" row="id" />
         </row>
-        <row name="table_id" null="1" autoincrement="0">
+        <key type="PRIMARY" name="">
+            <part>id</part>
+        </key>
+    </table>
+    <table x="424" y="536" name="level">
+        <row name="id" null="1" autoincrement="1">
             <datatype>INTEGER</datatype>
-            <default>NULL</default><relation table="table" row="id" />
+            <default>NULL</default></row>
+        <row name="value" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default></row>
+        <row name="matrix_id" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default><relation table="matrix" row="id" />
         </row>
         <key type="PRIMARY" name="">
             <part>id</part>

@@ -4,6 +4,6 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 
-class TableForm(Form):
+class MatrixForm(Form):
     name = StringField('Имя', validators=[DataRequired()])
     submit = SubmitField('ok')

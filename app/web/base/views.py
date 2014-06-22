@@ -5,4 +5,4 @@ from . import base
 
 @base.route('/')
 def index():
-    return redirect(url_for('tables.get'))
+    return redirect(url_for('matrices.get'))

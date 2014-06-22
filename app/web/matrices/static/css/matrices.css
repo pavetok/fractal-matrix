@@ -1,0 +1,22 @@
+.matrix {
+    display: table;
+}
+.matrix-row {
+    display: table-row;
+}
+.matrix-aspect {
+    display: table-cell;
+}
+.matrix-universum {
+    display: table-cell;
+    border: 1px solid #ddd;
+}
+.appearing {
+    visibility: hidden;
+}
+.matrix-aspect:hover > .appearing {
+    visibility: visible;
+}
+.matrix-universum:hover > .appearing {
+    visibility: visible;
+}

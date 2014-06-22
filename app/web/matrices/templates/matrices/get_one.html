@@ -1,0 +1,81 @@
+{% extends "base/base.html" %}
+
+{% block title %} Информация о матрице {% endblock %}
+
+{% block head %}
+	{{ super() }}
+	{% if level %}
+	<style type="text/css">
+	.matrix {
+		width: {{ matrix.get_slice(level)|length * 14 }}%;
+	}</style>
+	{% endif %}
+{% endblock %}
+
+{% block page_content %}
+	<!--matrix name-->
+	<div class="page-header">
+		<h1>{{ matrix.name }}
+			{% if level %}
+			<small>{{ level.value }} уровень</small>
+			{% endif %}
+		</h1>
+	</div>
+	{% if level %}
+	<!--matrix body-->
+	<div class="matrix">
+		{% for row in matrix.get_slice(level) %}
+		<div class="matrix-row">
+			{% for cell in row %}
+				{% if cell %}
+					{% if 'Aspect' in cell.__repr__() %}
+					<div class="matrix-aspect with-padding">
+						{{ cell.name }}
+						<a class="btn btn-default btn-xs appearing"
+						   href="{{ url_for('aspects.update', matrix_id=matrix.id,
+											aspect_id=cell.id) }}">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</a>
+					</div>
+					{% else %}
+					<div class="matrix-universum with-padding with-background">
+						{{ cell.name }}
+						<a class="btn btn-default btn-xs appearing"
+						   href="{{ url_for('universums.update', matrix_id=matrix.id,
+				   							universum_id=cell.id) }}">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</a>
+					</div>
+					{% endif %}
+				{% else %}
+				<div class="matrix-aspect with-padding"></div>
+				{% endif%}
+			{% endfor %}
+		</div>
+		{% endfor %}
+	</div>
+	<!--matrix levels pager-->
+	<ul class="pager pull-left">
+		{% if level.prev %}
+		<li><a href="{{ url_for('matrices.get', matrix_id=matrix.id,
+									level_id=level.prev.id) }}">
+			&larr; Предыдущий уровень</a></li>
+		{% else %}
+		<li class="disabled">
+			<a href="#">&larr; Предыдущий уровень</a>
+		</li>
+		{% endif %}
+		{% if level.next %}
+		<li><a href="{{ url_for('matrices.get', matrix_id=matrix.id,
+									level_id=level.next.id) }}">
+			Следующий уровень &rarr;</a>
+		</li>
+		{% else %}
+		<li><a href="{{ url_for('levels.generate', matrix_id=matrix.id,
+									level_value=matrix.levels|list|length + 1) }}">
+			Следующий уровень &rarr;</a>
+		</li>
+		{% endif %}
+	</ul>
+	{% endif %}
+{% endblock %}

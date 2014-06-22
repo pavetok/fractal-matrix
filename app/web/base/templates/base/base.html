@@ -1,10 +1,11 @@
 {% extends "bootstrap/base.html" %}
-{% block title %} Fractal Table {% endblock %}
+{% block title %} Fractal Matrix {% endblock %}
 
 <!--head-->
 {% block head %}
-	{{ super() }}
-	<link rel="stylesheet" href="{{ url_for('base.static', filename='styles.css') }}">
+{{ super() }}
+	<link rel="stylesheet" href="{{ url_for('base.static', filename='base.css') }}">
+	<link rel="stylesheet" href="{{ url_for('matrices.static', filename='matrices.css') }}">
 {% endblock %}
 
 <!--navbar-->
@@ -22,7 +23,7 @@
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
-				<li><a href="{{ url_for('tables.get') }}">Список таблиц</a></li>
+				<li><a href="{{ url_for('matrices.get') }}">Список матриц</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
@@ -43,34 +44,53 @@
 
 <!--content-->
 {% block content %}
-	<div class="container">
-		{% for message in get_flashed_messages() %}
-		<div class="alert alert-warning">
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			{{ message }}
-		</div>
-		{% endfor %}
-		<!--table submenu-->
-		{% if table %}
-		<div class="btn-group">
-			<a class="btn btn-link"
-			   href="{{ url_for('tables.get', table_id=table.id) }}"
-			   role="button">Таблица</a>
-			<a class="btn btn-link"
-			   href="{{ url_for('dimensions.get', table_id=table.id) }}"
-			   role="button">Измерения</a>
-			<a class="btn btn-link"
-			   href="{{ url_for('aspects.get', table_id=table.id) }}"
-			   role="button">Аспекты</a>
-			<a class="btn btn-link"
-			   href="{{ url_for('universums.get', table_id=table.id) }}"
-			   role="button">Универсумы</a>
-		</div>
-		{% endif %}
-		<!--page content-->
-		{% block page_content %}
-		{% endblock %}
+<div class="container">
+	{% for message in get_flashed_messages() %}
+	<div class="alert alert-warning">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{{ message }}
 	</div>
+	{% endfor %}
+
+	<!--matrix submenu-->
+	{% if matrix %}
+	<div class="btn-group">
+		<div class="btn-group">
+			<a class="btn btn-default dropdown-toggle"
+			   data-toggle="dropdown"
+			   role="button">Матрица
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				{% for level in matrix.levels %}
+				<li><a class="btn btn-link pull-left"
+					   href="{{ url_for('matrices.get', matrix_id=matrix.id,
+					   					level_id=level.id) }}"
+					   role="button">{{ level.value }} уровень</a></li>
+				{% endfor %}
+				<li><a class="btn btn-link pull-left"
+					   href="{{ url_for('levels.generate', matrix_id=matrix.id,
+					   					level_value=matrix.levels|list|length + 1) }}"
+					   role="button">Новый уровень</a></li>
+			</ul>
+		</div>
+		<a class="btn btn-default"
+		   href="{{ url_for('universums.get', matrix_id=matrix.id) }}"
+		   role="button">Универсумы</a>
+		<a class="btn btn-default"
+		   href="{{ url_for('aspects.get', matrix_id=matrix.id) }}"
+		   role="button">Аспекты</a>
+		<a class="btn btn-default"
+		   href="{{ url_for('dimensions.get', matrix_id=matrix.id) }}"
+		   role="button">Измерения</a>
+	</div>
+	{% endif %}
+
+	<!--page content-->
+	{% block page_content %}
+	{% endblock %}
+
+</div>
 {% endblock %}
 
 <!--scripts-->
