@@ -6,7 +6,7 @@ from .. import db
 class Matrix(db.Model):
     __tablename__ = 'matrix'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
+    name = db.Column(db.String(128), unique=True)
     levels = db.relationship('Level', backref='matrix', lazy='dynamic',
                              cascade='all, delete-orphan')
     aspects = db.relationship('Aspect', backref='matrix', lazy='dynamic',
@@ -16,7 +16,7 @@ class Matrix(db.Model):
     dimensions = db.relationship('Dimension', backref='matrix', lazy='dynamic',
                                  cascade='all, delete-orphan')
 
-    def get_slice(self, level):
+    def get_slice(self, level, universum):
         x_dimension = self.dimensions.filter_by(type='x').first()
         x_aspects = x_dimension.get_aspects(level)
         y_dimension = self.dimensions.filter_by(type='y').first()
@@ -31,10 +31,16 @@ class Matrix(db.Model):
                 row.extend(reversed(list(y_aspect.universums)))
             elif len(list(self.dimensions)) == 3:
                 for x_aspect, z_aspect in zip(x_aspects, z_aspects):
-                    row.append(y_aspect.universums.filter(
+                    universum_for_row = universum.subuniversums.filter(
                         Universum.aspects.contains(x_aspect),
                         Universum.aspects.contains(y_aspect),
-                        Universum.aspects.contains(z_aspect)).first())
+                        Universum.aspects.contains(z_aspect)).first() or \
+                                        y_aspect.universums.filter(
+                        Universum.aspects.contains(x_aspect),
+                        Universum.aspects.contains(y_aspect),
+                        Universum.aspects.contains(z_aspect)).first() or \
+                                        universum
+                    row.append(universum_for_row)
             rows.append(row)
         # добавляем заголовки столбцов матрицы
         last_row_aspects = list()
@@ -90,12 +96,13 @@ universum_aspect = db.Table('universum_aspect',
 class Aspect(db.Model):
     __tablename__ = 'aspect'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
+    name = db.Column(db.String(1024), unique=True)
     matrix_id = db.Column(db.Integer, db.ForeignKey('matrix.id'))
     level_id = db.Column(db.Integer, db.ForeignKey('level.id'))
     superaspect_id = db.Column(db.Integer, db.ForeignKey(id))
     subaspects = db.relationship('Aspect',
                                  cascade='all, delete-orphan',
+                                 lazy='dynamic',
                                  backref=db.backref('superaspect', remote_side=id))
 
     def get_aspects(self, level):
@@ -149,11 +156,12 @@ db.event.listen(Aspect.name, 'set', Aspect.update_dependent)
 class Universum(db.Model):
     __tablename__ = 'universum'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
+    name = db.Column(db.String(1024), unique=True)
     matrix_id = db.Column(db.Integer, db.ForeignKey('matrix.id'))
     level_id = db.Column(db.Integer, db.ForeignKey('level.id'))
     superuniversum_id = db.Column(db.Integer, db.ForeignKey(id))
     subuniversums = db.relationship('Universum',
+                                    lazy='dynamic',
                                     cascade='all, delete-orphan',
                                     backref=db.backref('superuniversum', remote_side=id))
     aspects = db.relationship('Aspect',
@@ -197,7 +205,7 @@ db.event.listen(Universum.name, 'set', Universum.update_dependent)
 class Dimension(db.Model):
     __tablename__ = 'dimension'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
+    name = db.Column(db.String(128), unique=True)
     type = db.Column(db.String(1), unique=True)
     matrix_id = db.Column(db.Integer, db.ForeignKey('matrix.id'))
     aspect_id = db.Column(db.Integer, db.ForeignKey('aspect.id'))

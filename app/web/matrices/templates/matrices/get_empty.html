@@ -1,0 +1,34 @@
+{% extends "base/base.html" %}
+
+{% block title %} Информация о матрице {% endblock %}
+
+{% block page_content %}
+	<!--matrix name-->
+	<div class="page-header">
+		<h1>{{ matrix.name }}
+		</h1>
+	</div>
+	<!--matrix levels pager-->
+	<ul class="pager pull-left">
+		{% if level.prev %}
+		<li><a href="{{ url_for('matrices.get', matrix_id=matrix.id,
+									level_id=level.prev.id) }}">
+			&larr; Предыдущий уровень</a></li>
+		{% else %}
+		<li class="disabled">
+			<a href="#">&larr; Предыдущий уровень</a>
+		</li>
+		{% endif %}
+		{% if level.next %}
+		<li><a href="{{ url_for('matrices.get', matrix_id=matrix.id,
+									level_id=level.next.id) }}">
+			Следующий уровень &rarr;</a>
+		</li>
+		{% else %}
+		<li><a href="{{ url_for('levels.generate', matrix_id=matrix.id,
+								level_value=matrix.levels|list|length + 1) }}">
+			Следующий уровень &rarr;</a>
+		</li>
+		{% endif %}
+	</ul>
+{% endblock %}

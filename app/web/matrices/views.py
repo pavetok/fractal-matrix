@@ -2,7 +2,7 @@
 from flask import render_template, url_for, flash, redirect
 from . import matrices
 from ... import db
-from ..models import Matrix, Level, Aspect
+from ..models import Matrix, Level, Universum
 from .forms import MatrixForm
 
 
@@ -10,13 +10,20 @@ from .forms import MatrixForm
 @matrices.route('/matrices/')
 @matrices.route('/matrices/<int:matrix_id>')
 @matrices.route('/matrices/<int:matrix_id>/levels/<int:level_id>')
-def get(matrix_id=None, level_id=0):
+@matrices.route('/matrices/<int:matrix_id>/levels/<int:level_id>/universums/<int:universum_id>')
+def get(matrix_id=None, level_id=0, universum_id=1):
     if matrix_id is None:
         matrices = Matrix.query.all()
         return render_template('matrices/get_all.html', matrices=matrices)
     matrix = Matrix.query.get_or_404(matrix_id)
     level = Level.query.get(level_id)
-    return render_template('matrices/get_one.html', matrix=matrix, level=level)
+    universum = Universum.query.get(universum_id)
+    if universum:
+        slice = matrix.get_slice(level, universum)
+        return render_template('matrices/get_one.html', matrix=matrix, slice=slice,
+                               level=level, universum=universum)
+    else:
+        return render_template('matrices/get_empty.html', matrix=matrix, level=level)
 
 
 @matrices.route('/matrices/create', methods=['GET', 'POST'])

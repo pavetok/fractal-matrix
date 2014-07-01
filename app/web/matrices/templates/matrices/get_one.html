@@ -7,7 +7,7 @@
 	{% if level %}
 	<style type="text/css">
 	.matrix {
-		width: {{ matrix.get_slice(level)|length * 14 }}%;
+		width: {{ slice|length * 20 }}%;
 	}</style>
 	{% endif %}
 {% endblock %}
@@ -15,7 +15,7 @@
 {% block page_content %}
 	<!--matrix name-->
 	<div class="page-header">
-		<h1>{{ matrix.name }}
+		<h1>{{ universum.name or matrix.name }}
 			{% if level %}
 			<small>{{ level.value }} уровень</small>
 			{% endif %}
@@ -24,25 +24,43 @@
 	{% if level %}
 	<!--matrix body-->
 	<div class="matrix">
-		{% for row in matrix.get_slice(level) %}
+		{% for row in slice %}
 		<div class="matrix-row">
-			{% for cell in row %}
-				{% if cell %}
-					{% if 'Aspect' in cell.__repr__() %}
+			{% for aspect_or_universum in row %}
+				{% if aspect_or_universum %}
+					{% if 'Aspect' in aspect_or_universum.__repr__() %}
 					<div class="matrix-aspect with-padding">
-						{{ cell.name }}
+						{{ aspect_or_universum.name }}
+						<br>
 						<a class="btn btn-default btn-xs appearing"
 						   href="{{ url_for('aspects.update', matrix_id=matrix.id,
-											aspect_id=cell.id) }}">
+											aspect_id=aspect_or_universum.id) }}">
 							<span class="glyphicon glyphicon-pencil"></span>
 						</a>
 					</div>
 					{% else %}
 					<div class="matrix-universum with-padding with-background">
-						{{ cell.name }}
+						{{ aspect_or_universum.name }}
+						<br>
+						{% if level.next %}
+						<a class="btn btn-default btn-xs appearing"
+						   href="{{ url_for('matrices.get',
+											matrix_id=matrix.id,
+											level_id=level.next.id,
+											universum_id=aspect_or_universum.id) }}">
+							<span class="glyphicon glyphicon-zoom-in"></span>
+						</a>
+						{% else %}
+						<a class="btn btn-default btn-xs appearing"
+						   href="{{ url_for('levels.generate', matrix_id=matrix.id,
+											level_value=matrix.levels|list|length + 1,
+											universum_id=aspect_or_universum.id) }}">
+							<span class="glyphicon glyphicon-zoom-in"></span>
+						</a>
+						{% endif %}
 						<a class="btn btn-default btn-xs appearing"
 						   href="{{ url_for('universums.update', matrix_id=matrix.id,
-				   							universum_id=cell.id) }}">
+				   							universum_id=aspect_or_universum.id) }}">
 							<span class="glyphicon glyphicon-pencil"></span>
 						</a>
 					</div>
@@ -72,7 +90,7 @@
 		</li>
 		{% else %}
 		<li><a href="{{ url_for('levels.generate', matrix_id=matrix.id,
-									level_value=matrix.levels|list|length + 1) }}">
+								level_value=matrix.levels|list|length + 1) }}">
 			Следующий уровень &rarr;</a>
 		</li>
 		{% endif %}
